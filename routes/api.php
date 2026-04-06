@@ -1,14 +1,26 @@
 <?php
 
+use App\Http\Controllers\Api\AuthController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\API\BookingController;
 
-Route::get('/test', function () {
-    return response()->json(['message' => 'API OK']);
+/*
+|--------------------------------------------------------------------------
+| Public Routes (tanpa auth)
+|--------------------------------------------------------------------------
+*/
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login',    [AuthController::class, 'login']);
+
+/*
+|--------------------------------------------------------------------------
+| Protected Routes (butuh token Sanctum)
+|--------------------------------------------------------------------------
+*/
+Route::middleware('auth:sanctum')->group(function () {
+
+    // Auth
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/me',      [AuthController::class, 'me']);
+
+    // Nanti tambah route lain di sini...
 });
-
-Route::post('/booking', [BookingController::class, 'store']);
-
-Route::get('/payment/{id}', [BookingController::class, 'createPayment']);
-
-Route::post('/midtrans/callback', [BookingController::class, 'callback']);
