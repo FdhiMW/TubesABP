@@ -12,12 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('venues', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->integer('capacity');
-            $table->decimal('price', 10, 2);
-            $table->timestamps();
-        });
+        $table->id();
+        $table->string('name');
+        $table->text('description')->nullable();
+        $table->string('location');
+        $table->integer('capacity');
+        $table->decimal('price_per_day', 15, 2);
+        $table->enum('status', ['active', 'inactive', 'maintenance'])->default('active');
+        $table->timestamps();
+    });
     }
 
     /**
@@ -25,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('venues');
+        //
     }
 };

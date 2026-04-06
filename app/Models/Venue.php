@@ -6,5 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Venue extends Model
 {
-    //
+    protected $table = 'venues';
+
+    protected $fillable = [
+        'name',
+        'description',
+        'location',
+        'capacity',
+        'price_per_day',
+        'status'
+    ];
 }
