@@ -6,27 +6,26 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('surveys', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Asumsi tabel users bawaan Laravel sudah ada
-        $table->foreignId('venue_id')->constrained()->onDelete('cascade');
-        $table->dateTime('survey_date');
-        $table->enum('status', ['pending', 'confirmed', 'completed', 'cancelled'])->default('pending');
-        $table->text('notes')->nullable();
-        $table->timestamps();
-    });
+            $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('venue_id')->constrained()->onDelete('cascade');
+            $table->dateTime('proposed_date');
+            $table->dateTime('confirmed_date')->nullable();
+            $table->enum('status', ['pending', 'confirmed', 'completed', 'cancelled'])->default('pending');
+            $table->text('notes')->nullable();
+            $table->text('admin_notes')->nullable();
+            $table->timestamps();
+
+            $table->index(['user_id', 'status']);
+            $table->index(['venue_id', 'proposed_date']);
+        });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('surveys');
     }
 };
