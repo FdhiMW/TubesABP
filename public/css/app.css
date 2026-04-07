@@ -1,0 +1,400 @@
+/* ================================================
+   APP.CSS - Pendopo UTI Wedding Venue
+   Converted from Vue.js scoped styles to global CSS
+   ================================================ */
+
+/* ---- Reset & Base ---- */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+html {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#app {
+    min-height: 100vh;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+
+/* ================================================
+   HERO SECTION (from Home.vue)
+   ================================================ */
+
+.hero {
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+    font-family: "Georgia", serif;
+    color: #21324a;
+}
+
+.hero-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.5;
+    z-index: 0;
+}
+
+/* ---- Navigation ---- */
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 48px;
+    position: relative;
+    z-index: 1;
+}
+
+.top-nav ul {
+    list-style: none;
+    display: flex;
+    gap: 24px;
+    margin: 0;
+    padding: 0;
+}
+
+.top-nav a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 24px;
+}
+
+.logo {
+    height: 100px;
+    width: auto;
+    object-fit: contain;
+}
+
+/* ---- Hero Inner Content ---- */
+.hero-inner {
+    padding: 80px 0 60px;
+    color: #fff;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.hero-text-content {
+    padding-left: 10%;
+    text-align: left;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.eyebrow {
+    letter-spacing: 3px;
+    margin: 0 0 30px;
+    font-size: 16px;
+}
+
+.title {
+    font-size: 80px;
+    margin: 0 0 40px;
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.subtitle {
+    font-size: 24px;
+    margin: 0 0 24px;
+    font-weight: 300;
+}
+
+.description {
+    font-size: 20px;
+    margin: 0;
+    line-height: 1.8;
+    max-width: 400px;
+}
+
+/* ---- Button ---- */
+.btn-primary {
+    display: inline-block;
+    margin: 40px auto 10px;
+    background: #d7a94a;
+    border: none;
+    padding: 16px 36px;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #fff;
+    font-weight: bold;
+    font-size: 16px;
+    align-self: center;
+    text-decoration: none;
+    transition: background 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: #c4952e;
+}
+
+/* ---- Scroll Button ---- */
+.scroll-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 20px;
+}
+
+.scroll-hint {
+    font-size: 16px;
+    color: #fff;
+    letter-spacing: 1px;
+}
+
+.scroll-btn {
+    width: 50px;
+    height: 50px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.scroll-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(4px);
+}
+
+
+/* ================================================
+   EXTENDED SECTION (from HomeExt.vue)
+   ================================================ */
+
+.home-ext {
+    font-family: "Georgia", serif;
+    color: #21324a;
+}
+
+/* ---- Intro / Features ---- */
+.intro {
+    padding: 56px 10%;
+    background: #fff;
+    text-align: center;
+}
+
+.intro h2 {
+    font-size: 24px;
+    color: #21324a;
+}
+
+.feature-list {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    margin-top: 32px;
+}
+
+.feature {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+}
+
+.feature:nth-child(even) {
+    flex-direction: row-reverse;
+}
+
+.feature-text {
+    flex: 1;
+    text-align: left;
+}
+
+.feature-text h3 {
+    font-size: 20px;
+    margin-bottom: 12px;
+    color: #21324a;
+}
+
+.feature-text p {
+    font-size: 16px;
+    line-height: 1.7;
+    color: #4a5568;
+}
+
+.feature-image img {
+    width: 360px;
+    height: auto;
+    border-radius: 4px;
+}
+
+
+/* ================================================
+   FOOTER (from HomeExt.vue)
+   ================================================ */
+
+.site-footer {
+    background: #14263a;
+    color: #fff;
+    padding: 48px 0 150px 10%;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 40px;
+}
+
+.footer-section {
+    flex: 1;
+}
+
+.brand-name {
+    font-size: 28px;
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+    line-height: 1.2;
+    font-weight: bold;
+}
+
+.footer-address {
+    margin: 12px 0;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #bbb;
+}
+
+.footer-contact {
+    margin: 12px 0;
+    font-size: 13px;
+    color: #bbb;
+}
+
+.link-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+}
+
+.link-group a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s;
+}
+
+.link-group a:hover {
+    color: #d7a94a;
+}
+
+.social-icons {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.social-icon {
+    color: #d7a94a;
+    text-decoration: none;
+    font-size: 16px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #d7a94a;
+    border-radius: 50%;
+    transition: background 0.2s, color 0.2s;
+}
+
+.social-icon:hover {
+    background: #d7a94a;
+    color: #14263a;
+}
+
+
+/* ================================================
+   RESPONSIVE
+   ================================================ */
+
+@media (max-width: 800px) {
+    /* Hero */
+    .title {
+        font-size: 40px;
+    }
+
+    .top-nav {
+        padding: 16px 24px;
+    }
+
+    .top-nav ul {
+        gap: 12px;
+    }
+
+    .top-nav a {
+        font-size: 16px;
+    }
+
+    .hero-text-content {
+        padding-left: 6%;
+    }
+
+    /* Features */
+    .feature {
+        flex-direction: column !important;
+    }
+
+    .feature-image img {
+        width: 100%;
+    }
+
+    /* Footer */
+    .footer-container {
+        flex-direction: column;
+        gap: 32px;
+    }
+
+    .footer-section {
+        text-align: center;
+    }
+
+    .link-group {
+        flex-direction: row;
+        justify-content: center;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .social-icons {
+        justify-content: center;
+    }
+}
