@@ -5,8 +5,6 @@ use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\VenueController;
-use App\Http\Controllers\BookingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,9 +12,8 @@ use App\Http\Controllers\BookingController;
 |--------------------------------------------------------------------------
 */
 Route::get('/', function () {
-    return redirect()->route('login');
-});
-
+        return view('dashboard.home');
+    })->name('home');
 /*
 |--------------------------------------------------------------------------
 | Auth Routes (hanya untuk tamu / belum login)
@@ -28,6 +25,7 @@ Route::middleware('guest')->group(function () {
 
     Route::get('/login',  [LoginController::class, 'showForm'])->name('login');
     Route::post('/login', [LoginController::class, 'login']);
+
 });
 
 /*
@@ -37,7 +35,6 @@ Route::middleware('guest')->group(function () {
 */
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Nanti tambah route lain di sini:
     // Route::resource('venues', VenueController::class);
