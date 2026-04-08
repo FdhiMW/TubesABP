@@ -1,20 +1,34 @@
 <?php
 
-<<<<<<< Updated upstream
-=======
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\BookingController;
->>>>>>> Stashed changes
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\VenueController;
+use App\Http\Controllers\BookingController;
 
+/*
+|--------------------------------------------------------------------------
+| Halaman Utama → redirect ke login
+|--------------------------------------------------------------------------
+*/
 Route::get('/', function () {
-    return view('welcome');
+        return view('dashboard.home');
+    })->name('home');
+/*
+|--------------------------------------------------------------------------
+| Auth Routes (hanya untuk tamu / belum login)
+|--------------------------------------------------------------------------
+*/
+Route::middleware('guest')->group(function () {
+    Route::get('/register',  [RegisterController::class, 'showForm'])->name('register');
+    Route::post('/register', [RegisterController::class, 'register']);
+
+    Route::get('/login',  [LoginController::class, 'showForm'])->name('login');
+    Route::post('/login', [LoginController::class, 'login']);
+
 });
-<<<<<<< Updated upstream
-=======
 
 /*
 |--------------------------------------------------------------------------
@@ -30,8 +44,11 @@ Route::middleware('auth')->group(function () {
     // dll.
 });
 
-// Public booking page (dummy data)
-Route::get('/booking', [BookingController::class, 'create'])->name('booking.create');
-Route::get('/booking/form', [BookingController::class, 'showForm'])->name('booking.form');
+Route::get('/venue', [VenueController::class, 'show']);
+
+Route::get('/booking-step1', [BookingController::class, 'step1']);
+Route::post('/booking-step1', [BookingController::class, 'step1Store']);
+
+Route::get('/booking-step2', [BookingController::class, 'step2']);
 Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
->>>>>>> Stashed changes
+
