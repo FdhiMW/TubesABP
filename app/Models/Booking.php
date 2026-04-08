@@ -12,8 +12,10 @@ class Booking extends Model
         'booking_code',
         'user_id',
         'venue_id',
-        'start_date',
+        'event_date',
         'end_date',
+        'event_time',
+        'guest_count',
         'total_price',
         'status'
     ];

@@ -4,47 +4,38 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Booking;
-use Illuminate\Support\Facades\Auth;
 
 class BookingController extends Controller
 {
-    public function step1()
+    public function create()
     {
-        $user = Auth::user();
+        $user = auth()->user();
 
-        return view('booking.step1', compact('user'));
-    }
-
-    public function step1Store(Request $request)
-    {
-        session([
-            'booking.name' => $request->name,
-            'booking.email' => $request->email,
-            'booking.phone' => $request->phone,
-        ]);
-
-        return redirect('/booking-step2');
-    }
-
-    public function step2()
-    {
-        return view('booking.step2');
+        return view('booking.form', compact('user'));
     }
 
     public function store(Request $request)
     {
-        Booking::create([
-            'booking_code' => 'BOOK-' . time(),
-            'user_id' => 1, // sementara
-            'venue_id' => 1,
-            'start_date' => $request->event_date,
-            'end_date' => $request->event_date,
-            'total_price' => 25000000,
-            'status' => 'pending'
+        $request->validate([
+            'event_date' => 'required|date',
+            'event_time' => 'required',
+            'guest_count' => 'required|integer',
+            'venue_id' => 'required',
         ]);
 
-        session()->forget('booking');
+        Booking::create([
+            'booking_code' => 'BOOK-' . time(),
+            'user_id' => auth()->id(),
+            'venue_id' => $request->venue_id,
+            'event_date' => $request->event_date,
+            'end_date' => $request->event_date,
+            'event_time' => $request->event_time,
+            'guest_count' => $request->guest_count,
+            'total_price' => 25000000,
+            'status' => 'pending',
+        ]);
 
-        return redirect('/venue')->with('success', 'Booking berhasil!');
+        return redirect()->route('home')
+            ->with('success', 'Booking berhasil!');
     }
 }

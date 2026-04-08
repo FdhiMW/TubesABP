@@ -45,9 +45,5 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/venue', [VenueController::class, 'show']);
-
-Route::get('/booking-step1', [BookingController::class, 'step1']);
-Route::post('/booking-step1', [BookingController::class, 'step1Store']);
-
-Route::get('/booking-step2', [BookingController::class, 'step2']);
 Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
+Route::get('/booking', [BookingController::class, 'create'])->name('booking.create');
