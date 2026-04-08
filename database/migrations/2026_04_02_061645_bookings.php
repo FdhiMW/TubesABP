@@ -15,6 +15,8 @@ return new class extends Migration
             $table->foreignId('venue_id')->constrained()->onDelete('cascade');
             $table->date('event_date');
             $table->date('end_date')->nullable();
+            $table->integer('guest_count');
+            $table->time('event_time')->nullable();
             $table->decimal('total_price', 15, 2);
             $table->enum('status', [
                 'pending',
