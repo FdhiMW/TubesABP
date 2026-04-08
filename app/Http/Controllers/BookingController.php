@@ -28,6 +28,17 @@ class BookingController extends Controller
             'venue_id' => 'required',
         ]);
 
+        $exists = Booking::where('venue_id', $request->venue_id)
+        ->where('event_date', $request->event_date)
+        ->whereIn('status', ['pending', 'confirmed']) // biar yg cancel gak dihitung
+        ->exists();
+
+        if ($exists) {
+            return back()->withErrors([
+                'event_date' => 'Tanggal ini sudah dibooking!'
+            ])->withInput();
+        }
+
         Booking::create([
             'booking_code' => 'BOOK-' . time(),
             'user_id' => auth()->id(),

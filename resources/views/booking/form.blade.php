@@ -60,17 +60,17 @@
 
                         <div style="margin-bottom:16px;">
                             <label style="display:block; margin-bottom:8px; color:#0b3120; font-weight:600;">Nama Pengantin</label>
-                            <input type="text" value="{{ $user->name }}" name="bride_groom_name" placeholder="Andi & Salabila" style="width:100%; padding:12px 16px; border:1px solid #ddd; border-radius:8px; font-size:14px; box-sizing:border-box;" required>
+                            <input type="text" value="{{ $user->name }}" name="bride_groom_name" placeholder="Andi & Salabila" style="width:100%; padding:12px 16px; border:1px solid #ddd; border-radius:8px; font-size:14px; box-sizing:border-box;" readonly>
                         </div>
 
                         <div style="margin-bottom:16px;">
                             <label style="display:block; margin-bottom:8px; color:#0b3120; font-weight:600;">Email</label>
-                            <input type="email" value="{{ $user->email }}" name="email" placeholder="andi.salsa@gmail.com" style="width:100%; padding:12px 16px; border:1px solid #ddd; border-radius:8px; font-size:14px; box-sizing:border-box;" required>
+                            <input type="email" value="{{ $user->email }}" name="email" placeholder="andi.salsa@gmail.com" style="width:100%; padding:12px 16px; border:1px solid #ddd; border-radius:8px; font-size:14px; box-sizing:border-box;" readonly>
                         </div>
 
                         <div style="margin-bottom:24px;">
                             <label style="display:block; margin-bottom:8px; color:#0b3120; font-weight:600;">No Telepon / WhatsApp</label>
-                            <input type="tel" value="{{ $user->phone }}" name="phone" placeholder="+62 812-9876-5432" style="width:100%; padding:12px 16px; border:1px solid #ddd; border-radius:8px; font-size:14px; box-sizing:border-box;" required>
+                            <input type="tel" value="{{ $user->phone }}" name="phone" placeholder="+62 812-9876-5432" style="width:100%; padding:12px 16px; border:1px solid #ddd; border-radius:8px; font-size:14px; box-sizing:border-box;" readonly>
                         </div>
                     </div>
 
