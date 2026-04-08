@@ -51,3 +51,4 @@ Route::post('/booking-step1', [BookingController::class, 'step1Store']);
 
 Route::get('/booking-step2', [BookingController::class, 'step2']);
 Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
+
