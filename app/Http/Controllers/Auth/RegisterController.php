@@ -34,7 +34,7 @@ class RegisterController extends Controller
         $request->session()->regenerate();
 
         return redirect()
-            ->route('dashboard')
+            ->route('home')
             ->with('success', 'Registrasi berhasil! Selamat datang di Pendopo Uti.');
     }
 }
