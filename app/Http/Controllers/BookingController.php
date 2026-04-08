@@ -7,11 +7,16 @@ use App\Models\Booking;
 
 class BookingController extends Controller
 {
-    public function create()
+    public function form()
     {
         $user = auth()->user();
 
         return view('booking.form', compact('user'));
+    }
+
+    public function create()
+    {
+        return view('booking.create');
     }
 
     public function store(Request $request)

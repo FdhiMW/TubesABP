@@ -26,7 +26,7 @@
                     <!-- Button with green fill and black drop shadow to the bottom-right -->
                     <a href="#availability" style="display:inline-block; text-decoration:none; width:260px; background:#cfeeb2; color:#0c3b2a; padding:14px 18px; border-radius:10px; box-shadow:10px 10px 0 rgba(0,0,0,0.85); font-weight:800;">LIHAT KETERSEDIAAN TANGGAL <span style="float:right; background:#0c3b2a; color:#fff; border-radius:999px; padding:8px 10px; margin-left:8px;">→</span></a>
 
-                    <a href="{{ route('booking.create') }}" style="display:flex; align-items:center; justify-content:space-between; text-decoration:none; width:260px; background:#cfeeb2; color:#0c3b2a; padding:14px 18px; border-radius:10px; border:none; box-shadow:10px 10px 0 rgba(0,0,0,0.85); font-weight:800;">BOOK NOW <span style="background:#0c3b2a; color:#fff; border-radius:999px; padding:8px 10px;">→</span></a>
+                    <a href="{{ route('booking.form') }}" style="display:flex; align-items:center; justify-content:space-between; text-decoration:none; width:260px; background:#cfeeb2; color:#0c3b2a; padding:14px 18px; border-radius:10px; border:none; box-shadow:10px 10px 0 rgba(0,0,0,0.85); font-weight:800;">BOOK NOW <span style="background:#0c3b2a; color:#fff; border-radius:999px; padding:8px 10px;">→</span></a>
                 </div>
             </div>
         </div>

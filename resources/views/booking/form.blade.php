@@ -48,7 +48,7 @@
                         </ul>
                     </div>
                 @endif
-                
+
                 <form action="{{ route('booking.store') }}" method="POST" id="bookingForm">
                     @csrf
                     <input type="hidden" name="venue_id" id="step" value="1">
@@ -261,7 +261,7 @@ function previousStep() {
 
 function handleBackButton() {
     if (currentStep === 1) {
-        window.location.href = '{{ route('booking.create') }}';
+        window.location.href = '{{ route('booking.form') }}';
     } else {
         previousStep();
     }
@@ -326,7 +326,7 @@ function previousStep() {
 function handleBackButton() {
     if (currentStep === 1) {
         // Go back to booking page
-        window.location.href = '{{ route('booking.create') }}';
+        window.location.href = '{{ route('booking.form') }}';
     } else {
         previousStep();
     }

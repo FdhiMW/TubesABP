@@ -15,7 +15,7 @@
             <ul>
                 <li><a href="#">Home</a></li>
                 <li><a href="#facilities">Facilities</a></li>
-                <li><a href="#rooms">Rooms</a></li>
+                <li><a href="{{ route('booking.create') }}">Booking</a></li>
                 <li><a href="#contact">Contact-us</a></li>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
