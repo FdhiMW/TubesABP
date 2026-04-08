@@ -3,40 +3,55 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Venue;
 use App\Models\Booking;
 
 class BookingController extends Controller
 {
-    public function create(Request $request)
+    public function form()
     {
-        $date = $request->date;
+        $user = auth()->user();
 
-        return view('booking.create', compact('date'));
+        return view('booking.form', compact('user'));
+    }
+
+    public function create()
+    {
+        return view('booking.create');
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'event_date' => 'required|date',
+            'event_time' => 'required',
+            'guest_count' => 'required|integer',
+            'venue_id' => 'required',
         ]);
 
-        $exists = Booking::where('start_date', $request->event_date)->exists();
+        $exists = Booking::where('venue_id', $request->venue_id)
+        ->where('event_date', $request->event_date)
+        ->whereIn('status', ['pending', 'confirmed']) // biar yg cancel gak dihitung
+        ->exists();
 
         if ($exists) {
-            return back()->withErrors('Tanggal sudah dibooking');
+            return back()->withErrors([
+                'event_date' => 'Tanggal ini sudah dibooking!'
+            ])->withInput();
         }
 
         Booking::create([
             'booking_code' => 'BOOK-' . time(),
-            'user_id' => 1,
-            'venue_id' => 1,
-            'start_date' => $request->event_date,
+            'user_id' => auth()->id(),
+            'venue_id' => $request->venue_id,
+            'event_date' => $request->event_date,
             'end_date' => $request->event_date,
+            'event_time' => $request->event_time,
+            'guest_count' => $request->guest_count,
             'total_price' => 25000000,
-            'status' => 'pending'
+            'status' => 'pending',
         ]);
 
-        return redirect('/venue')->with('success', 'Booking berhasil!');
+        return redirect()->route('home')
+            ->with('success', 'Booking berhasil!');
     }
 }
