@@ -5,6 +5,8 @@ use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\VenueController;
+use App\Http\Controllers\BookingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,3 +43,11 @@ Route::middleware('auth')->group(function () {
     // Route::resource('bookings', BookingController::class);
     // dll.
 });
+
+Route::get('/venue', [VenueController::class, 'show']);
+
+Route::get('/booking-step1', [BookingController::class, 'step1']);
+Route::post('/booking-step1', [BookingController::class, 'step1Store']);
+
+Route::get('/booking-step2', [BookingController::class, 'step2']);
+Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
