@@ -52,3 +52,4 @@ Route::get('/booking/form', [BookingController::class, 'form'])->name('booking.f
 Route::get('/survey/form', [SurveyController::class, 'form'])->name('survey.form');
 Route::get('/survey/create', [SurveyController::class, 'create'])->name('survey.create');
 Route::post('/survey/store', [SurveyController::class, 'store'])->name('survey.store');
+Route::get('/availability-data', [BookingController::class, 'availability']);
