@@ -15,6 +15,10 @@
     {{-- App CSS --}}
     <link rel="stylesheet" href="{{ asset('css/app.css') }}" />
 
+    {{-- Calender --}}
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
     @stack('styles')
 </head>
 <body>

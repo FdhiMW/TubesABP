@@ -76,7 +76,7 @@
 
                         <div style="margin-bottom:16px;">
                             <label style="display:block; margin-bottom:8px; color:#0b3120; font-weight:600;">Waktu Survey</label>
-                            <input type="time" name="proposed_time" value="10:00 AM" style="width:100%; padding:12px 16px; border:1px solid #ddd; border-radius:8px; font-size:14px; box-sizing:border-box;" required>
+                            <input type="time" name="proposed_time" min="07:00" max="22:00" value="10:00 AM" style="width:100%; padding:12px 16px; border:1px solid #ddd; border-radius:8px; font-size:14px; box-sizing:border-box;" required>
                         </div>
 
                         <div style="margin-bottom:16px;">

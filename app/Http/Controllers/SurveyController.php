@@ -25,9 +25,23 @@ class SurveyController extends Controller
     {
         $request->validate([
             'proposed_date' => 'required|date',
-            'proposed_time' => 'required',
+            'proposed_time' => 'required|date_format:H:i|after_or_equal:07:00|before_or_equal:22:00',
             'notes' => 'nullable|string'
         ]);
+
+        $totalBooking = Booking::where('venue_id', $request->venue_id)
+            ->where('event_date', $request->proposed_date)
+            ->count();
+
+        $totalSurvey = Survey::where('venue_id', $request->venue_id)
+            ->where('proposed_date', $request->proposed_date)
+            ->count();
+
+        if (($totalBooking + $totalSurvey) >= 2) {
+            return back()->withErrors([
+                'proposed_date' => 'Tanggal sudah penuh (maksimal 2 booking)'
+            ]);
+        }
 
         $start = Carbon::parse($request->proposed_time);
         $end = $start->copy()->addHour(); // 🔥 survey = 1 jam
@@ -69,6 +83,6 @@ class SurveyController extends Controller
             'status' => 'pending'
         ]);
 
-        return redirect()->back()->with('success', 'Survey berhasil dibooking!');
+        return redirect()->route('booking.create')->with('success', 'Survey berhasil dibooking!');
     }
 }
