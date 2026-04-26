@@ -7,6 +7,7 @@ use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VenueController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\SurveyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,3 +49,6 @@ Route::get('/venue', [VenueController::class, 'show']);
 Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
 Route::get('/booking', [BookingController::class, 'create'])->name('booking.create');
 Route::get('/booking/form', [BookingController::class, 'form'])->name('booking.form');
+Route::get('/survey/form', [SurveyController::class, 'form'])->name('survey.form');
+Route::get('/survey/create', [SurveyController::class, 'create'])->name('survey.create');
+Route::post('/survey/store', [SurveyController::class, 'store'])->name('survey.store');

@@ -16,7 +16,7 @@
                 <li><a href="#">Home</a></li>
                 <li><a href="#facilities">Facilities</a></li>
                 <li><a href="{{ route('booking.create') }}">Booking</a></li>
-                <li><a href="#contact">Contact-us</a></li>
+                <li><a href="#contact">Manage</a></li>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit">Logout</button>

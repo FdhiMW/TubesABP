@@ -12,8 +12,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('venue_id')->constrained()->onDelete('cascade');
-            $table->dateTime('proposed_date');
-            $table->dateTime('confirmed_date')->nullable();
+            $table->date('proposed_date');
+            $table->date('confirmed_date')->nullable();
+            $table->time('proposed_time');
+            $table->time('end_time')->nullable();
+            $table->time('confirmed_time')->nullable();
             $table->enum('status', ['pending', 'confirmed', 'completed', 'cancelled'])->default('pending');
             $table->text('notes')->nullable();
             $table->text('admin_notes')->nullable();

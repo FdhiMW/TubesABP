@@ -17,6 +17,7 @@ return new class extends Migration
             $table->date('end_date')->nullable();
             $table->integer('guest_count');
             $table->time('event_time')->nullable();
+            $table->time('end_time')->nullable();
             $table->decimal('total_price', 15, 2);
             $table->enum('status', [
                 'pending',
