@@ -3,6 +3,16 @@
 @section('title', 'Form Booking Survey - Pendopo UTI')
 
 @section('content')
+<!-- Navigation Bar -->
+<nav style="background:#f5f1ed; padding:20px 0; border-bottom:1px solid #e8e0d8; font-family: Georgia, serif;">
+    <div style="max-width:1100px; margin:0 auto; display:flex; justify-content:flex-end; gap:40px; padding:0 20px;">
+        <a href="{{ url('/') }}" style="color:#8a8a8a; text-decoration:none; font-size:16px; font-weight:500; transition:color 0.3s;">Home</a>
+        <a href="#" style="color:#8a8a8a; text-decoration:none; font-size:16px; font-weight:500; transition:color 0.3s;">Facilities</a>
+        <a href="{{ route('booking.form') }}" style="color:#0b3120; text-decoration:none; font-size:16px; font-weight:500; transition:color 0.3s;">Booking</a>
+        <a href="{{ route('manage.index') }}" style="color:#8a8a8a; text-decoration:none; font-size:16px; font-weight:500; transition:color 0.3s;">Manage</a>
+    </div>
+</nav>
+
 <div style="min-height:100vh; background:#f5f1ed; font-family: Georgia, serif; padding:40px 20px;">
     <div style="max-width:1100px; margin:0 auto; display:flex; gap:40px;">
 
@@ -182,7 +192,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     window.handleBackButton = function () {
         if (currentStep === 1) {
-            window.location.href = '{{ route('booking.form') }}';
+            window.location.href = '{{ url('/booking#') }}';
         } else {
             previousStep();
         }
