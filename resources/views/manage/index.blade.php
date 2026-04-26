@@ -1,6 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
+<!-- Navigation Bar -->
+<nav style="background:#f5f1ed; padding:20px 0; border-bottom:1px solid #e8e0d8; font-family: Georgia, serif;">
+    <div style="max-width:1100px; margin:0 auto; display:flex; justify-content:flex-end; gap:40px; padding:0 20px;">
+        <a href="{{ url('/') }}" style="color:#8a8a8a; text-decoration:none; font-size:16px; font-weight:500; transition:color 0.3s;">Home</a>
+        <a href="#" style="color:#8a8a8a; text-decoration:none; font-size:16px; font-weight:500; transition:color 0.3s;">Facilities</a>
+        <a href="{{ url('/booking#') }}" style="color:#8a8a8a; text-decoration:none; font-size:16px; font-weight:500; transition:color 0.3s;">Booking</a>
+        <a href="{{ route('manage.index') }}" style="color:#0b3120; text-decoration:none; font-size:16px; font-weight:500; transition:color 0.3s;">Manage</a>
+    </div>
+</nav>
+
 <div style="padding:40px;">
 
     {{-- SUCCESS MESSAGE --}}
