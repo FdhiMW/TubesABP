@@ -34,6 +34,10 @@ Route::middleware('guest')->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::middleware('auth')->group(function () {
+    Route::get('/venue', [VenueController::class, 'show']);
+    Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
+    Route::get('/booking', [BookingController::class, 'create'])->name('booking.create');
+    Route::get('/booking/form', [BookingController::class, 'form'])->name('booking.form');
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 
     // Nanti tambah route lain di sini:
