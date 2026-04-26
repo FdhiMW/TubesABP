@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VenueController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\SurveyController;
+use App\Http\Controllers\ManageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +39,17 @@ Route::middleware('guest')->group(function () {
 */
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
+
+    Route::get('/manage', [ManageController::class, 'index'])->name('manage.index');
+
+    Route::post('/booking/{id}/cancel', [ManageController::class, 'cancelBooking'])->name('booking.cancel');
+    Route::post('/survey/{id}/cancel', [ManageController::class, 'cancelSurvey'])->name('survey.cancel');
+
+    Route::get('/booking/{id}/reschedule', [ManageController::class, 'rescheduleBookingForm'])->name('booking.reschedule.form');
+    Route::post('/booking/{id}/reschedule', [ManageController::class, 'rescheduleBooking'])->name('booking.reschedule');
+
+    Route::get('/survey/{id}/reschedule', [ManageController::class, 'rescheduleSurveyForm'])->name('survey.reschedule.form');
+    Route::post('/survey/{id}/reschedule', [ManageController::class, 'rescheduleSurvey'])->name('survey.reschedule');
 
     // Nanti tambah route lain di sini:
     // Route::resource('venues', VenueController::class);
