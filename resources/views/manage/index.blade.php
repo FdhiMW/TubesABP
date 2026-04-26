@@ -20,6 +20,14 @@
         </div>
     @endif
 
+    @if ($errors->any())
+    <div style="background:#f8d7da; padding:10px; margin-bottom:20px; border-radius:8px; color:red;">
+        @foreach ($errors->all() as $error)
+            <p>{{ $error }}</p>
+        @endforeach
+    </div>
+    @endif
+
     {{-- ================= BOOKING ================= --}}
     <h2>Riwayat Booking Venue</h2>
 
@@ -107,13 +115,13 @@
             <form id="rescheduleForm" method="POST">
                 @csrf
 
-                <input type="date" name="date" id="reschedule_date" required
+                <input type="date" id="reschedule_date" required
                     style="margin:10px 0; width:100%; padding:8px;">
 
-                <input type="time" name="time" id="reschedule_time" required
+                <input type="time" id="reschedule_time" required
                     style="margin:10px 0; width:100%; padding:8px;">
 
-                <input type="time" name="end_time" id="reschedule_end_time"
+                <input type="time" id="reschedule_end_time"
                     style="margin:10px 0; width:100%; padding:8px; display:none;">
 
                 <div style="display:flex; gap:10px; margin-top:15px;">
@@ -132,30 +140,36 @@
 function openReschedule(type, id, date, time, endTime = null) {
     document.getElementById('rescheduleModal').style.display = 'flex';
 
-    document.getElementById('reschedule_date').value = date;
-    document.getElementById('reschedule_time').value = time;
+    let dateInput = document.getElementById('reschedule_date');
+    let timeInput = document.getElementById('reschedule_time');
+    let endInput  = document.getElementById('reschedule_end_time');
+
+    dateInput.value = date;
+    timeInput.value = time;
 
     let form = document.getElementById('rescheduleForm');
-    let endInput = document.getElementById('reschedule_end_time');
+
+    // RESET dulu
+    dateInput.removeAttribute('name');
+    timeInput.removeAttribute('name');
+    endInput.removeAttribute('name');
 
     if (type === 'booking') {
         form.action = '/booking/' + id + '/reschedule';
 
-        document.getElementById('reschedule_date').name = 'event_date';
-        document.getElementById('reschedule_time').name = 'event_time';
+        dateInput.name = 'event_date';
+        timeInput.name = 'event_time';
 
-        // 🔥 tampilkan end_time
         endInput.style.display = 'block';
         endInput.name = 'end_time';
-        endInput.value = endTime ?? '';
+        endInput.value = endTime ? endTime.substring(0,5) : '';
 
     } else {
         form.action = '/survey/' + id + '/reschedule';
 
-        document.getElementById('reschedule_date').name = 'proposed_date';
-        document.getElementById('reschedule_time').name = 'proposed_time';
+        dateInput.name = 'proposed_date';
+        timeInput.name = 'proposed_time';
 
-        // 🔥 sembunyikan end_time
         endInput.style.display = 'none';
     }
 }
