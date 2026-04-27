@@ -17,10 +17,17 @@
                 <li><a href="#facilities">Facilities</a></li>
                 <li><a href="{{ route('booking.create') }}">Booking</a></li>
                 <li><a href="{{ route('manage.index') }}">Manage</a></li>
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit">Logout</button>
-                </form>
+
+                <x-admin-link variant="hero" />
+
+                @auth
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit">Logout</button>
+                    </form>
+                @else
+                    <li><a href="{{ route('login') }}">Login</a></li>
+                @endauth
             </ul>
         </nav>
 

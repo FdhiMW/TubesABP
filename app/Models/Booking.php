@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Booking extends Model
 {
@@ -18,6 +19,26 @@ class Booking extends Model
         'end_time',
         'guest_count',
         'total_price',
-        'status'
+        'status',
+        'payment_reference',
+        'cancellation_reason',
+        'cancelled_at',
     ];
+
+    protected $casts = [
+        'event_date'   => 'date',
+        'end_date'     => 'date',
+        'cancelled_at' => 'datetime',
+        'total_price'  => 'decimal:2',
+    ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function venue(): BelongsTo
+    {
+        return $this->belongsTo(Venue::class);
+    }
 }

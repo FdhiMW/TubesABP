@@ -17,6 +17,29 @@ class ManageController extends Controller
         return view('manage.index', compact('bookings', 'surveys'));
     }
 
+    // ================= RESCHEDULE FORMS =================
+    public function rescheduleBookingForm($id)
+    {
+        $booking = Booking::findOrFail($id);
+
+        if ($booking->user_id != auth()->id()) {
+            abort(403);
+        }
+
+        return view('manage.reschedule_booking', compact('booking'));
+    }
+
+    public function rescheduleSurveyForm($id)
+    {
+        $survey = Survey::findOrFail($id);
+
+        if ($survey->user_id != auth()->id()) {
+            abort(403);
+        }
+
+        return view('manage.reschedule_survey', compact('survey'));
+    }
+
     // ================= CANCEL BOOKING =================
     public function cancelBooking($id)
     {
@@ -74,7 +97,6 @@ class ManageController extends Controller
             'end_time'   => 'required|date_format:H:i|after:event_time|before_or_equal:22:00',
         ]);
 
-        // 🔥 cek max 2 booking/hari
         $totalBooking = Booking::where('venue_id', $booking->venue_id)
             ->where('event_date', $request->event_date)
             ->where('id', '!=', $booking->id)
@@ -90,7 +112,6 @@ class ManageController extends Controller
             return back()->withErrors('Tanggal sudah penuh');
         }
 
-        // 🔥 cek bentrok BOOKING
         $bookingConflict = Booking::where('venue_id', $booking->venue_id)
             ->where('event_date', $request->event_date)
             ->where('id', '!=', $booking->id)
@@ -109,7 +130,6 @@ class ManageController extends Controller
             return back()->withErrors('Waktu bentrok dengan booking lain');
         }
 
-        // 🔥 cek bentrok dengan SURVEY
         $surveyConflict = Survey::where('venue_id', $booking->venue_id)
             ->where('proposed_date', $request->event_date)
             ->whereIn('status', ['pending', 'confirmed'])
@@ -127,7 +147,6 @@ class ManageController extends Controller
             return back()->withErrors('Waktu bentrok dengan jadwal survey');
         }
 
-        // ✅ baru update
         $booking->event_date = $request->event_date;
         $booking->event_time = $request->event_time;
         $booking->end_time   = $request->end_time;
@@ -170,7 +189,6 @@ class ManageController extends Controller
             return back()->withErrors('Tanggal sudah penuh');
         }
 
-        // ✅ tetap auto +1 jam
         $survey->proposed_date = $request->proposed_date;
         $survey->proposed_time = $request->proposed_time;
         $survey->end_time      = Carbon::parse($request->proposed_time)->addHour();
