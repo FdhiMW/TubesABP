@@ -320,7 +320,7 @@ function openReschedule(type, id, date, time, endTime = null) {
     let endContainer = document.getElementById('endTimeContainer');
 
     dateInput.value = date;
-    timeInput.value = time;
+    timeInput.value = time ? time.substring(0,5) : '';
 
     let form = document.getElementById('rescheduleForm');
 
