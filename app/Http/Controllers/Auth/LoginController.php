@@ -9,7 +9,6 @@ class LoginController extends Controller
 {
     /**
      * GET /login
-     * Tampilkan form login.
      */
     public function showForm()
     {
@@ -18,7 +17,6 @@ class LoginController extends Controller
 
     /**
      * POST /login
-     * Proses login dengan rate limiting.
      */
     public function login(LoginRequest $request)
     {
@@ -26,8 +24,11 @@ class LoginController extends Controller
 
         $request->session()->regenerate();
 
+        // Admin → admin dashboard. User biasa → home.
+        $redirectRoute = auth()->user()->isAdmin() ? 'admin.dashboard' : 'home';
+
         return redirect()
-            ->intended(route('home'))
+            ->intended(route($redirectRoute))
             ->with('success', 'Login berhasil!');
     }
 }

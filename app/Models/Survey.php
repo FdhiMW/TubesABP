@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Survey extends Model
 {
@@ -10,14 +11,27 @@ class Survey extends Model
         'user_id',
         'venue_id',
         'proposed_date',
+        'confirmed_date',
         'proposed_time',
         'end_time',
+        'confirmed_time',
         'notes',
-        'status'
+        'admin_notes',
+        'status',
     ];
 
-    public function user()
+    protected $casts = [
+        'proposed_date'  => 'date',
+        'confirmed_date' => 'date',
+    ];
+
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function venue(): BelongsTo
+    {
+        return $this->belongsTo(Venue::class);
     }
 }
