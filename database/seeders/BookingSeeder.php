@@ -62,7 +62,7 @@ class BookingSeeder extends Seeder
                 'end_time'     => '21:00:00',
                 'guest_count'  => 400,
                 'total_price'  => 25000000,
-                'status'       => 'awaiting_payment',
+                'status'       => 'confirmed',
             ],
 
             // 4. Booking CONFIRMED — sudah lunas & dikonfirmasi

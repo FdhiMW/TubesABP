@@ -64,7 +64,10 @@
                                 Rp {{ number_format($b->total_price, 0, ',', '.') }}
                             </td>
                             <td style="padding:14px; text-align:center;">
-                                @include('admin.bookings._status_badge', ['status' => $b->status])
+                                @include('admin.bookings._status_badge', [
+                                    'status' => $b->status,
+                                    'payment_status' => $b->payment_status
+                                ])
                             </td>
                             <td style="padding:14px; text-align:right;">
                                 <a href="{{ route('admin.bookings.show', $b->id) }}"

@@ -22,6 +22,8 @@ class Booking extends Model
         'package',          // ← BARU
         'total_price',
         'status',
+        'payment_status',
+        'midtrans_order_id',
         'payment_reference',
         'cancellation_reason',
         'cancelled_at',

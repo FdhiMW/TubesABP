@@ -18,7 +18,10 @@
                     <p style="margin:0 0 5px; color:#8a8a8a; font-size:13px;">Kode Booking</p>
                     <h2 style="margin:0; color:#0b3120; font-family:monospace;">{{ $booking->booking_code }}</h2>
                 </div>
-                @include('admin.bookings._status_badge', ['status' => $booking->status])
+                @include('admin.bookings._status_badge', [
+                    'status' => $booking->status,
+                    'payment_status' => $booking->payment_status
+                ])
             </div>
 
             <h3 style="margin:0 0 15px; color:#0b3120; font-size:16px;">📋 Detail Acara</h3>
@@ -100,7 +103,7 @@
                     </form>
                 </div>
 
-            @elseif($booking->status === 'paid')
+            @elseif($booking->payment_status === 'paid')
                 <div style="background:white; padding:25px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.05);">
                     <h3 style="margin:0 0 10px; color:#0b3120;">✓ Konfirmasi Final</h3>
                     <p style="margin:0 0 15px; font-size:13px; color:#8a8a8a;">
