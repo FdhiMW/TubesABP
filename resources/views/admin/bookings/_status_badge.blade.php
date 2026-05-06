@@ -1,22 +1,41 @@
 @php
-    $colorMap = [
-        'pending'          => ['#fef3c7', '#92400e'],
-        'awaiting_payment' => ['#dbeafe', '#1e40af'],
-        'paid'             => ['#d1fae5', '#065f46'],
-        'confirmed'        => ['#d1fae5', '#065f46'],
-        'cancelled'        => ['#fee2e2', '#991b1b'],
-        'completed'        => ['#e0e7ff', '#3730a3'],
-    ];
-    $labels = [
-        'pending'          => 'Pending',
-        'awaiting_payment' => 'Menunggu Bayar',
-        'paid'             => 'Sudah Bayar',
-        'confirmed'        => 'Confirmed',
-        'cancelled'        => 'Cancelled',
-        'completed'        => 'Selesai',
-    ];
-    [$bg, $fg] = $colorMap[$status] ?? ['#e5e7eb', '#374151'];
+    // Default
+    $bg = '#e5e7eb';
+    $fg = '#374151';
+    $label = ucfirst($status);
+
+    if ($status == 'pending') {
+        $bg = '#fef3c7';
+        $fg = '#92400e';
+        $label = 'Pending';
+
+    } elseif ($status == 'cancelled') {
+        $bg = '#fee2e2';
+        $fg = '#991b1b';
+        $label = 'Cancelled';
+
+    } elseif ($status == 'completed') {
+        $bg = '#e0e7ff';
+        $fg = '#3730a3';
+        $label = 'Selesai';
+
+    } elseif ($status == 'confirmed') {
+
+        if ($payment_status == 'paid') {
+            // ✅ SUDAH BAYAR
+            $bg = '#d1fae5';
+            $fg = '#065f46';
+            $label = 'Lunas';
+
+        } else {
+            // ⏳ BELUM BAYAR
+            $bg = '#dbeafe';
+            $fg = '#1e40af';
+            $label = 'Menunggu Bayar';
+        }
+    }
 @endphp
+
 <span style="background:{{ $bg }}; color:{{ $fg }}; padding:4px 10px; border-radius:12px; font-size:12px; font-weight:bold; white-space:nowrap;">
-    {{ $labels[$status] ?? $status }}
+    {{ $label }}
 </span>

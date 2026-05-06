@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ManageController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SurveyController;
 use App\Http\Controllers\VenueController;
 use Illuminate\Support\Facades\Route;
@@ -40,6 +41,7 @@ Route::middleware('guest')->group(function () {
 */
 Route::get('/venue', [VenueController::class, 'show']);
 Route::get('/availability-data', [BookingController::class, 'availability']);
+Route::post('/midtrans/callback', [PaymentController::class, 'callback']);
 
 /*
 |--------------------------------------------------------------------------
@@ -61,6 +63,8 @@ Route::middleware('auth')->group(function () {
 
     // Manage
     Route::get('/manage', [ManageController::class, 'index'])->name('manage.index');
+
+    Route::get('/payment/{id}', [PaymentController::class, 'pay']);
 
     Route::post('/booking/{id}/cancel', [ManageController::class, 'cancelBooking'])->name('booking.cancel');
     Route::post('/survey/{id}/cancel',  [ManageController::class, 'cancelSurvey'])->name('survey.cancel');

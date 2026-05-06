@@ -21,12 +21,17 @@ return new class extends Migration
             $table->decimal('total_price', 15, 2);
             $table->enum('status', [
                 'pending',
-                'awaiting_payment',
-                'paid',
                 'confirmed',
                 'cancelled',
                 'completed',
             ])->default('pending');
+            $table->enum('payment_status', [
+                'unpaid',
+                'pending',
+                'paid',
+                'failed',
+            ])->default('unpaid');
+            $table->string('midtrans_order_id')->nullable();
             $table->string('payment_reference')->nullable();
             $table->text('cancellation_reason')->nullable();
             $table->timestamp('cancelled_at')->nullable();
