@@ -2,18 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Constants\BookingPackage;
 use App\Models\Booking;
 use App\Models\Survey;
+use App\Models\Venue;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class BookingController extends Controller
 {
     public function form()
     {
-        $user = auth()->user();
+        $user     = auth()->user();
+        $packages = BookingPackage::all();
+        $venue    = Venue::first();
 
-        return view('booking.form', compact('user'));
+        return view('booking.form', compact('user', 'packages', 'venue'));
     }
 
     public function create()
@@ -23,134 +27,173 @@ class BookingController extends Controller
 
     public function store(Request $request)
     {
+        // ===== VALIDASI =====
         $request->validate([
-            'event_date' => 'required|date',
-            'event_time' => 'required|date_format:H:i|after_or_equal:07:00|before_or_equal:22:00',
-            'end_time' => 'required',
-            'guest_count' => 'required|integer',
-            'venue_id' => 'required',
+            'event_date'  => 'required|date|after_or_equal:today',
+            'event_time'  => 'required|date_format:H:i|after_or_equal:07:00|before_or_equal:22:00',
+            'end_time'    => 'required|date_format:H:i|before_or_equal:22:00',
+            'guest_count' => 'required|integer|min:1',
+            'venue_id'    => 'required|exists:venues,id',
+            'package'     => 'required|in:' . implode(',', BookingPackage::keys()),
+        ], [
+            'package.required'    => 'Mohon pilih paket terlebih dahulu.',
+            'package.in'          => 'Paket yang dipilih tidak valid.',
+            'event_date.after_or_equal' => 'Tanggal acara tidak boleh di masa lalu.',
+            'event_time.after_or_equal' => 'Waktu mulai paling cepat jam 07:00.',
+            'end_time.before_or_equal'  => 'Waktu selesai paling lambat jam 22:00.',
         ]);
 
+        // Validasi manual: end_time harus > event_time
+        if ($request->end_time <= $request->event_time) {
+            return back()->withErrors([
+                'end_time' => 'Waktu selesai harus setelah waktu mulai.',
+            ])->withInput();
+        }
+
+        $venue = Venue::findOrFail($request->venue_id);
+        $activeBookingStatus = ['pending', 'awaiting_payment', 'paid', 'confirmed'];
+        $activeSurveyStatus  = ['pending', 'confirmed'];
+
+        // ===== CEK 1: Full-day taken? =====
+        $isFullDayTaken = Booking::where('venue_id', $request->venue_id)
+            ->where('event_date', $request->event_date)
+            ->whereIn('status', $activeBookingStatus)
+            ->where('event_time', '<=', '07:00:00')
+            ->where('end_time', '>=', '22:00:00')
+            ->exists();
+
+        if ($isFullDayTaken) {
+            return back()->withErrors([
+                'event_date' => 'Tanggal ini sudah dipesan untuk seharian penuh (07:00 - 22:00).',
+            ])->withInput();
+        }
+
+        // ===== CEK 2: Slot penuh (max 2)? =====
         $totalBooking = Booking::where('venue_id', $request->venue_id)
             ->where('event_date', $request->event_date)
-            ->whereIn('status', ['pending', 'confirmed'])
+            ->whereIn('status', $activeBookingStatus)
             ->count();
 
         $totalSurvey = Survey::where('venue_id', $request->venue_id)
             ->where('proposed_date', $request->event_date)
-            ->whereIn('status', ['pending', 'confirmed'])
+            ->whereIn('status', $activeSurveyStatus)
             ->count();
 
         if (($totalBooking + $totalSurvey) >= 2) {
             return back()->withErrors([
-                'event_date' => 'Tanggal sudah penuh (maksimal 2 booking)'
+                'event_date' => 'Tanggal ini sudah penuh (maksimal 2 booking per hari).',
             ])->withInput();
         }
 
-        $start = Carbon::parse($request->event_time);
-        $end = Carbon::parse($request->end_time);
+        // ===== CEK 3: Minta full-day padahal sudah terisi? =====
+        $isFullDayRequest = $request->event_time === '07:00' && $request->end_time === '22:00';
 
-        // 🔥 CEK BENTROK BOOKING
-        $bookingExists = Booking::where('venue_id', $request->venue_id)
-            ->where('event_date', $request->event_date)
-            ->whereIn('status', ['pending', 'confirmed'])
-            ->where(function ($query) use ($start, $end) {
-                $query->where('event_time', '<', $end)
-                    ->where('end_time', '>', $start);
-            })
-            ->exists();
-
-        // 🔥 CEK BENTROK SURVEY (anggap survey = 1 jam)
-        $surveyExists = Survey::where('venue_id', $request->venue_id)
-            ->whereDate('proposed_date', $request->event_date)
-            ->whereIn('status', ['pending', 'confirmed'])
-            ->where(function ($query) use ($start, $end) {
-                $query->where('proposed_time', '<', $end)
-                    ->whereRaw('ADDTIME(proposed_time, "01:00:00") > ?', [$start]);
-            })
-            ->exists();
-
-        // 🔥 VALIDASI BENTROK
-        if ($bookingExists || $surveyExists) {
+        if ($isFullDayRequest && ($totalBooking + $totalSurvey) >= 1) {
             return back()->withErrors([
-                'event_date' => 'Waktu tidak tersedia (bentrok dengan booking atau survey).'
+                'event_date' => 'Tidak bisa booking seharian — sudah ada booking/survey lain di tanggal ini.',
             ])->withInput();
         }
 
-        // 🔥 SIMPAN DATA
+        // ===== CEK 4: Bentrok jam =====
+        $start = Carbon::parse($request->event_time);
+        $end   = Carbon::parse($request->end_time);
+
+        $bookingConflict = Booking::where('venue_id', $request->venue_id)
+            ->where('event_date', $request->event_date)
+            ->whereIn('status', $activeBookingStatus)
+            ->where(function ($q) use ($start, $end) {
+                $q->where('event_time', '<', $end->format('H:i:s'))
+                  ->where('end_time',   '>', $start->format('H:i:s'));
+            })
+            ->exists();
+
+        $surveyConflict = Survey::where('venue_id', $request->venue_id)
+            ->whereDate('proposed_date', $request->event_date)
+            ->whereIn('status', $activeSurveyStatus)
+            ->where(function ($q) use ($start, $end) {
+                $q->where('proposed_time', '<', $end->format('H:i:s'))
+                  ->whereRaw('ADDTIME(proposed_time, "01:00:00") > ?', [$start->format('H:i:s')]);
+            })
+            ->exists();
+
+        if ($bookingConflict || $surveyConflict) {
+            return back()->withErrors([
+                'event_time' => 'Jam yang Anda pilih bentrok dengan booking/survey lain.',
+            ])->withInput();
+        }
+
+        // ===== HARGA DARI PAKET =====
+        $totalPrice = BookingPackage::price($request->package);
+
+        // ===== SIMPAN BOOKING =====
         Booking::create([
-            'booking_code' => 'BOOK-' . time(),
-            'user_id' => auth()->id(),
-            'venue_id' => $request->venue_id,
-            'event_date' => $request->event_date,
-            'end_date' => $request->event_date,
-            'event_time' => $request->event_time,
-            'end_time' => $request->end_time, // 🔥 tambahan
-            'guest_count' => $request->guest_count,
-            'total_price' => 25000000,
-            'status' => 'pending',
+            'booking_code' => 'BOOK-' . strtoupper(uniqid()),
+            'user_id'      => auth()->id(),
+            'venue_id'     => $venue->id,
+            'event_date'   => $request->event_date,
+            'end_date'     => $request->event_date,
+            'event_time'   => $request->event_time,
+            'end_time'     => $request->end_time,
+            'guest_count'  => $request->guest_count,
+            'package'      => $request->package,
+            'total_price'  => $totalPrice,
+            'status'       => 'pending',
         ]);
 
-        return redirect()->route('booking.create')
-            ->with('success', 'Booking berhasil!');
+        return redirect()->route('manage.index')
+            ->with('success', 'Booking berhasil dibuat! Menunggu persetujuan admin.');
     }
 
     public function availability()
     {
-        $dates = [];
+        $activeBookingStatus = ['pending', 'awaiting_payment', 'paid', 'confirmed'];
+        $activeSurveyStatus  = ['pending', 'confirmed'];
 
-        // booking
         $bookings = Booking::selectRaw('event_date as date, COUNT(*) as total')
-            ->whereIn('status', ['pending', 'confirmed'])
+            ->whereIn('status', $activeBookingStatus)
             ->groupBy('event_date')
             ->get();
 
-        // survey
         $surveys = Survey::selectRaw('proposed_date as date, COUNT(*) as total')
-            ->whereIn('status', ['pending', 'confirmed'])
+            ->whereIn('status', $activeSurveyStatus)
             ->groupBy('proposed_date')
             ->get();
 
-        // gabung data
-        foreach ($bookings as $b) {
-            $dates[$b->date] = ($dates[$b->date] ?? 0) + $b->total;
-        }
+        $dates = [];
+        foreach ($bookings as $b) $dates[$b->date] = ($dates[$b->date] ?? 0) + $b->total;
+        foreach ($surveys as $s)  $dates[$s->date] = ($dates[$s->date] ?? 0) + $s->total;
 
-        foreach ($surveys as $s) {
-            $dates[$s->date] = ($dates[$s->date] ?? 0) + $s->total;
-        }
+        $fullDayDates = Booking::whereIn('status', $activeBookingStatus)
+            ->where('event_time', '<=', '07:00:00')
+            ->where('end_time', '>=', '22:00:00')
+            ->pluck('event_date')
+            ->map(fn ($d) => Carbon::parse($d)->format('Y-m-d'))
+            ->toArray();
 
         $events = [];
-
         $start = Carbon::now()->startOfYear();
-        $end = Carbon::now()->endOfYear();
+        $end   = Carbon::now()->endOfYear();
 
         for ($date = $start->copy(); $date <= $end; $date->addDay()) {
-
-            $d = $date->format('Y-m-d');
+            $d     = $date->format('Y-m-d');
             $total = $dates[$d] ?? 0;
 
-            // 🔥 cek full day
-            $isFullDay = Booking::whereDate('event_date', $d)
-                ->where('event_time', '<=', '07:00:00')
-                ->where('end_time', '>=', '22:00:00')
-                ->exists();
-
-            if ($isFullDay) {
-                $color = '#ff6b6b'; // merah
-            } elseif ($total == 0) {
-                $color = '#b7e4c7'; // hijau
+            if (in_array($d, $fullDayDates) || $total >= 2) {
+                $color = '#ff6b6b';
+                $title = 'Penuh';
             } elseif ($total == 1) {
-                $color = '#ffe066'; // kuning
+                $color = '#ffe066';
+                $title = '1 booking';
             } else {
-                $color = '#ff6b6b'; // merah
+                $color = '#b7e4c7';
+                $title = 'Tersedia';
             }
 
             $events[] = [
-                'title' => $total . ' booking',
-                'start' => $d,
-                'display' => 'background', // 🔥 penting
-                'color' => $color
+                'title'   => $title,
+                'start'   => $d,
+                'display' => 'background',
+                'color'   => $color,
             ];
         }
 
