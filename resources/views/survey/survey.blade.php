@@ -4,28 +4,47 @@
 
 @section('content')
 <!-- Navigation Bar -->
-<nav style="background:#f5f1ed; padding:20px 0; border-bottom:1px solid #e8e0d8; font-family: Georgia, serif;">
-    <div style="max-width:1100px; margin:0 auto; display:flex; justify-content:flex-end; align-items:center; gap:40px; padding:0 20px;">
-        <a href="{{ url('/') }}" style="color:#8a8a8a; text-decoration:none; font-size:16px; font-weight:500;">Home</a>
-        <a href="#" style="color:#8a8a8a; text-decoration:none; font-size:16px; font-weight:500;">Facilities</a>
-        <a href="{{ url('/booking#') }}" style="color:#8a8a8a; text-decoration:none; font-size:16px; font-weight:500;">Booking</a>
-        <a href="{{ route('manage.index') }}" style="color:#8a8a8a; text-decoration:none; font-size:16px; font-weight:500;">Manage</a>
+<nav style="background:#f5f1ed; padding:18px 0; border-bottom:1px solid #e8e0d8; font-family:Georgia, serif; position:sticky; top:0; z-index:100;">
+    <div style="max-width:1200px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; padding:0 30px;">
+        <a href="{{ url('/') }}" style="text-decoration:none;">
+            <span style="color:#0b3120; font-size:22px; font-weight:bold; letter-spacing:1px;">PENDOPO UTI</span>
+        </a>
+        <div style="display:flex; gap:35px; align-items:center;">
+            <a href="{{ url('/') }}" style="color:#8a8a8a; text-decoration:none; font-size:15px;">Home</a>
+            <a href="{{ url('/#facilities') }}" style="color:#8a8a8a; text-decoration:none; font-size:15px;">Facilities</a>
+            <a href="{{ route('booking.create') }}" style="color:#0b3120; text-decoration:none; font-size:15px; font-weight:600;">Booking</a>
+            <a href="{{ route('manage.index') }}" style="color:#8a8a8a; text-decoration:none; font-size:15px;">Manage</a>
 
-        {{-- Link Admin Panel — hanya muncul kalau role admin --}}
-        <x-admin-link />
+            @auth
+                @if(auth()->user()->role === 'admin')
+                    <a href="{{ route('admin.dashboard') }}"
+                       style="background:#d4af37; color:#0b3120; text-decoration:none; padding:8px 16px; border-radius:4px; font-size:14px; font-weight:bold;">
+                        🛡️ Admin Panel
+                    </a>
+                @endif
+                <form method="POST" action="{{ route('logout') }}" style="margin:0;">
+                    @csrf
+                    <button type="submit" style="background:transparent; border:1px solid #8a8a8a; color:#8a8a8a; padding:8px 16px; border-radius:4px; cursor:pointer; font-family:Georgia, serif; font-size:14px;">
+                        Logout
+                    </button>
+                </form>
+            @else
+                <a href="{{ route('login') }}" style="color:#8a8a8a; text-decoration:none; font-size:15px;">Login</a>
+            @endauth
+        </div>
     </div>
 </nav>
 
-<div style="min-height:100vh; background:#f5f1ed; font-family: Georgia, serif; padding:40px 20px;">
-    <div style="max-width:1100px; margin:0 auto; display:flex; gap:40px;">
+<div style="min-height:100vh; background:linear-gradient(90deg,#fbf6ef 0%, #ffffff 60%); font-family: Georgia, serif;">
+    <div style="display:flex;">
 
         <!-- Left column: Form Card -->
-        <div style="flex:1; max-width:500px;">
+        <div style="width:50%; height:100vh; position:relative; padding-left:36px; display:flex; align-items:center; overflow:hidden;">
             <!-- Decorative flowers on far left -->
-            <div style="position:fixed; left:20px; top:150px; width:160px; height:360px; background-image:url('{{ asset('asset/images/flowerbg1.png') }}'); background-size:cover; background-position:center; z-index:0; pointer-events:none;"></div>
+            <div style="position:absolute; left:-80px; top:50%; transform:translateY(-50%); width:260px; height:520px; background-image:url('{{ asset('asset/images/flowerbg1.png') }}'); background-size:cover; background-position:center left; transform:translateX(0); z-index:0; pointer-events:none; filter:drop-shadow(0 10px 20px rgba(0,0,0,0.12));"></div>
 
             <!-- Form Card -->
-            <div style="background:#fff; border-radius:16px; padding:40px; box-shadow:0 8px 32px rgba(0,0,0,0.1); position:relative; z-index:1;">
+            <div style="background:#fff; border-radius:16px; padding:30px; box-shadow:0 8px 32px rgba(0,0,0,0.1); position:relative; z-index:1; width:100%; max-width:450px; max-height:90vh; overflow-y:auto;">
                 
                 <!-- Progress Indicator -->
                 <div id="progressContainer" style="margin-bottom:48px;">
@@ -111,11 +130,11 @@
             </div>
         </div>
 
-        <!-- Right column: Couple Photo -->
-        <div style="flex:1; display:flex; align-items:center; justify-content:center;">
-            <div style="width:100%; max-width:500px; aspect-ratio:3/4;">
-                <img src="{{ asset('asset/images/examwedding.png') }}" alt="Wedding Couple" style="width:100%; height:100%; object-fit:cover; border-radius:24px; box-shadow:0 16px 48px rgba(0,0,0,0.15);">
-            </div>
+        <!-- Right column (large image) -->
+        <div style="width:50%; height:100vh; overflow:hidden; position:relative;">
+            <img src="{{ asset('asset/images/examwedding.png') }}" alt="Wedding Couple" style="width:100%; height:100%; object-fit:cover; display:block; filter:contrast(1.02) saturate(1.05);" />
+            <!-- white gradient fade on left to mimic design -->
+            <div style="position:absolute; left:0; top:0; bottom:0; width:40%; background:linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.2) 100%);"></div>
         </div>
     </div>
 </div>

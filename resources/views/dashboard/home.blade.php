@@ -10,25 +10,36 @@
     <header class="hero">
         <img class="hero-bg" src="{{ asset('asset/images/hero.png') }}" alt="Hero background" />
 
-        <nav class="top-nav">
-            <img class="logo" src="{{ asset('asset/images/pendopoutinobg.png') }}" alt="Pendopo UTI" />
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#facilities">Facilities</a></li>
-                <li><a href="{{ route('booking.create') }}">Booking</a></li>
-                <li><a href="{{ route('manage.index') }}">Manage</a></li>
+        {{-- ========== TOP NAVBAR ========== --}}
+        <nav style="background:#f5f1ed; padding:18px 0; border-bottom:1px solid #e8e0d8; font-family:Georgia, serif; position:sticky; top:0; z-index:100;">
+            <div style="max-width:1200px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; padding:0 30px;">
+                <a href="{{ url('/') }}" style="text-decoration:none;">
+                    <span style="color:#0b3120; font-size:22px; font-weight:bold; letter-spacing:1px;">PENDOPO UTI</span>
+                </a>
+                <div style="display:flex; gap:35px; align-items:center;">
+                    <a href="{{ url('/') }}" style="color:#0b3120; text-decoration:none; font-size:15px; font-weight:600;">Home</a>
+                    <a href="{{ url('/#facilities') }}" style="color:#8a8a8a; text-decoration:none; font-size:15px;">Facilities</a>
+                    <a href="{{ route('booking.create') }}" style="color:#8a8a8a; text-decoration:none; font-size:15px;">Booking</a>
+                    <a href="{{ route('manage.index') }}" style="color:#8a8a8a; text-decoration:none; font-size:15px;">Manage</a>
 
-                <x-admin-link variant="hero" />
-
-                @auth
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit">Logout</button>
-                    </form>
-                @else
-                    <li><a href="{{ route('login') }}">Login</a></li>
-                @endauth
-            </ul>
+                    @auth
+                        @if(auth()->user()->role === 'admin')
+                            <a href="{{ route('admin.dashboard') }}"
+                               style="background:#d4af37; color:#0b3120; text-decoration:none; padding:8px 16px; border-radius:4px; font-size:14px; font-weight:bold;">
+                                🛡️ Admin Panel
+                            </a>
+                        @endif
+                        <form method="POST" action="{{ route('logout') }}" style="margin:0;">
+                            @csrf
+                            <button type="submit" style="background:transparent; border:1px solid #8a8a8a; color:#8a8a8a; padding:8px 16px; border-radius:4px; cursor:pointer; font-family:Georgia, serif; font-size:14px;">
+                                Logout
+                            </button>
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}" style="color:#8a8a8a; text-decoration:none; font-size:15px;">Login</a>
+                    @endauth
+                </div>
+            </div>
         </nav>
 
         <div class="hero-inner">
@@ -85,23 +96,47 @@
         </main>
 
         {{-- Footer --}}
-        <footer class="site-footer" id="contact">
-            <div class="footer-container">
-                <div class="footer-section footer-brand">
-                    <div class="brand-name">LUXURY<br/>HOTELS</div>
-                    <p class="footer-address">457 Evergreen Rd, Roseville,<br/>CA 95672</p>
-                    <p class="footer-contact">luxury.hotels@example.com</p>
+        <footer style="background:#5a5238; padding:60px 40px; position:relative; margin-top:80px;">
+            <!-- Decorative triangle shape at top -->
+            <div style="position:absolute; top:-40px; left:50%; transform:translateX(-50%); width:0; height:0; border-left:40px solid transparent; border-right:40px solid transparent; border-bottom:40px solid #5a5238;"></div>
+
+            <div style="max-width:1200px; margin:0 auto; display:flex; justify-content:space-between; align-items:flex-start; gap:60px; font-family:Georgia, serif;">
+                
+                <!-- Left: Brand & Contact Info -->
+                <div style="flex:1; text-align:left;">
+                    <div style="margin-bottom:20px;">
+                        <div style="font-size:32px; font-weight:bold; color:#d4af37; letter-spacing:2px; line-height:1.2; margin-bottom:20px;">PENDOPO<br/>UTI</div>
+                    </div>
+                    <p style="color:#e8e0d8; font-size:14px; margin:10px 0; line-height:1.6;">
+                        Jl. Tim. Ash, RT.007/RW.008, Jatiasih Bekasi<br/>
+                        +0815 920 398<br/>
+                        pendopoutwedding@gmail.com
+                    </p>
                 </div>
 
-                <div class="footer-section footer-links">
-                    <div class="link-group">
-                        <a href="#">About Us</a>
-                        <a href="#">Contact</a>
-                        <a href="#">Terms &amp; Conditions</a>
-                        <div class="social-icons" style="margin-top: 20px;">
-                            <a href="#" class="social-icon">f</a>
-                            <a href="#" class="social-icon">𝕏</a>
-                            <a href="#" class="social-icon">📷</a>
+                <!-- Middle: Links -->
+                <div style="flex:1;">
+                    <div style="display:flex; flex-direction:column; gap:20px;">
+                        <a href="#" style="color:#e8e0d8; text-decoration:none; font-size:15px; transition:color 0.3s;">About Us</a>
+                        <a href="#" style="color:#e8e0d8; text-decoration:none; font-size:15px; transition:color 0.3s;">Contact</a>
+                        <a href="#" style="color:#e8e0d8; text-decoration:none; font-size:15px; transition:color 0.3s;">Terms &amp; Conditions</a>
+                    </div>
+                </div>
+
+                <!-- Right: Social Media -->
+                <div style="flex:1;">
+                    <div style="display:flex; flex-direction:column; gap:20px;">
+                        <div style="display:flex; align-items:center; gap:15px;">
+                            <span style="color:#d4af37; font-size:14px; font-weight:bold;">f</span>
+                            <a href="#" style="color:#e8e0d8; text-decoration:none; font-size:15px;">Facebook</a>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:15px;">
+                            <span style="color:#d4af37; font-size:14px; font-weight:bold;">𝕏</span>
+                            <a href="#" style="color:#e8e0d8; text-decoration:none; font-size:15px;">Twitter</a>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:15px;">
+                            <span style="color:#d4af37; font-size:14px; font-weight:bold;">📷</span>
+                            <a href="#" style="color:#e8e0d8; text-decoration:none; font-size:15px;">@pendopoutiofficial</a>
                         </div>
                     </div>
                 </div>
