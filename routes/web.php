@@ -98,4 +98,13 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/surveys/{id}/approve',   [AdminController::class, 'approveSurvey'])->name('surveys.approve');
     Route::post('/surveys/{id}/reject',    [AdminController::class, 'rejectSurvey'])->name('surveys.reject');
     Route::post('/surveys/{id}/complete',  [AdminController::class, 'completeSurvey'])->name('surveys.complete');
+
+    // Package Management (Admin only)
+    Route::get('/packages',                  [\App\Http\Controllers\Admin\PackageController::class, 'index'])->name('packages.index');
+    Route::get('/packages/create',           [\App\Http\Controllers\Admin\PackageController::class, 'create'])->name('packages.create');
+    Route::post('/packages',                 [\App\Http\Controllers\Admin\PackageController::class, 'store'])->name('packages.store');
+    Route::get('/packages/{package}/edit',   [\App\Http\Controllers\Admin\PackageController::class, 'edit'])->name('packages.edit');
+    Route::put('/packages/{package}',        [\App\Http\Controllers\Admin\PackageController::class, 'update'])->name('packages.update');
+    Route::delete('/packages/{package}',     [\App\Http\Controllers\Admin\PackageController::class, 'destroy'])->name('packages.destroy');
+    Route::post('/packages/{package}/toggle', [\App\Http\Controllers\Admin\PackageController::class, 'toggleActive'])->name('packages.toggle');
 });

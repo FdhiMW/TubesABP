@@ -24,12 +24,16 @@
                 📊 Dashboard
             </a>
             <a href="{{ route('admin.bookings.index') }}"
-               style="{{ $linkStyle }} {{ str_starts_with($current, 'admin.bookings') ? $activeStyle : '' }}">
-                🏛️ Booking
+                style="{{ $linkStyle }} {{ str_starts_with($current, 'admin.bookings') ? $activeStyle : '' }}">
+                    🏛️ Booking
             </a>
             <a href="{{ route('admin.surveys.index') }}"
-               style="{{ $linkStyle }} {{ str_starts_with($current, 'admin.surveys') ? $activeStyle : '' }}">
-                📅 Survey
+                style="{{ $linkStyle }} {{ str_starts_with($current, 'admin.surveys') ? $activeStyle : '' }}">
+                    📅 Survey
+            </a>
+            <a href="{{ route('admin.packages.index') }}"
+                style="{{ $linkStyle }} {{ str_starts_with($current, 'admin.packages') ? $activeStyle : '' }}">
+                    📦 Paket
             </a>
         </nav>
 

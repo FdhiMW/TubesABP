@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Constants\BookingPackage;
 use App\Models\Booking;
+use App\Models\Package;
 use App\Models\Survey;
 use App\Models\Venue;
 use Carbon\Carbon;
@@ -14,7 +14,7 @@ class BookingController extends Controller
     public function form()
     {
         $user     = auth()->user();
-        $packages = BookingPackage::all();
+        $packages = Package::active()->get();   // hanya paket aktif
         $venue    = Venue::first();
 
         return view('booking.form', compact('user', 'packages', 'venue'));
@@ -27,23 +27,27 @@ class BookingController extends Controller
 
     public function store(Request $request)
     {
-        // ===== VALIDASI =====
         $request->validate([
             'event_date'  => 'required|date|after_or_equal:today',
             'event_time'  => 'required|date_format:H:i|after_or_equal:07:00|before_or_equal:22:00',
             'end_time'    => 'required|date_format:H:i|before_or_equal:22:00',
             'guest_count' => 'required|integer|min:1',
             'venue_id'    => 'required|exists:venues,id',
-            'package'     => 'required|in:' . implode(',', BookingPackage::keys()),
+            'package_id'  => 'required|exists:packages,id',
         ], [
-            'package.required'    => 'Mohon pilih paket terlebih dahulu.',
-            'package.in'          => 'Paket yang dipilih tidak valid.',
-            'event_date.after_or_equal' => 'Tanggal acara tidak boleh di masa lalu.',
-            'event_time.after_or_equal' => 'Waktu mulai paling cepat jam 07:00.',
-            'end_time.before_or_equal'  => 'Waktu selesai paling lambat jam 22:00.',
+            'package_id.required' => 'Mohon pilih paket terlebih dahulu.',
+            'package_id.exists'   => 'Paket yang dipilih tidak valid.',
         ]);
 
-        // Validasi manual: end_time harus > event_time
+        // Pastikan paket masih aktif
+        $package = Package::active()->find($request->package_id);
+        if (! $package) {
+            return back()->withErrors([
+                'package_id' => 'Paket yang dipilih sudah tidak tersedia.',
+            ])->withInput();
+        }
+
+        // Validasi manual: end_time > event_time
         if ($request->end_time <= $request->event_time) {
             return back()->withErrors([
                 'end_time' => 'Waktu selesai harus setelah waktu mulai.',
@@ -54,7 +58,7 @@ class BookingController extends Controller
         $activeBookingStatus = ['pending', 'awaiting_payment', 'paid', 'confirmed'];
         $activeSurveyStatus  = ['pending', 'confirmed'];
 
-        // ===== CEK 1: Full-day taken? =====
+        // Cek 1: Full-day taken?
         $isFullDayTaken = Booking::where('venue_id', $request->venue_id)
             ->where('event_date', $request->event_date)
             ->whereIn('status', $activeBookingStatus)
@@ -68,7 +72,7 @@ class BookingController extends Controller
             ])->withInput();
         }
 
-        // ===== CEK 2: Slot penuh (max 2)? =====
+        // Cek 2: Slot penuh (max 2)?
         $totalBooking = Booking::where('venue_id', $request->venue_id)
             ->where('event_date', $request->event_date)
             ->whereIn('status', $activeBookingStatus)
@@ -85,7 +89,7 @@ class BookingController extends Controller
             ])->withInput();
         }
 
-        // ===== CEK 3: Minta full-day padahal sudah terisi? =====
+        // Cek 3: Minta full-day padahal sudah terisi?
         $isFullDayRequest = $request->event_time === '07:00' && $request->end_time === '22:00';
 
         if ($isFullDayRequest && ($totalBooking + $totalSurvey) >= 1) {
@@ -94,7 +98,7 @@ class BookingController extends Controller
             ])->withInput();
         }
 
-        // ===== CEK 4: Bentrok jam =====
+        // Cek 4: Bentrok jam
         $start = Carbon::parse($request->event_time);
         $end   = Carbon::parse($request->end_time);
 
@@ -122,10 +126,7 @@ class BookingController extends Controller
             ])->withInput();
         }
 
-        // ===== HARGA DARI PAKET =====
-        $totalPrice = BookingPackage::price($request->package);
-
-        // ===== SIMPAN BOOKING =====
+        // Simpan booking
         Booking::create([
             'booking_code' => 'BOOK-' . strtoupper(uniqid()),
             'user_id'      => auth()->id(),
@@ -135,8 +136,8 @@ class BookingController extends Controller
             'event_time'   => $request->event_time,
             'end_time'     => $request->end_time,
             'guest_count'  => $request->guest_count,
-            'package'      => $request->package,
-            'total_price'  => $totalPrice,
+            'package_id'   => $package->id,
+            'total_price'  => $package->price,
             'status'       => 'pending',
         ]);
 
@@ -179,14 +180,11 @@ class BookingController extends Controller
             $total = $dates[$d] ?? 0;
 
             if (in_array($d, $fullDayDates) || $total >= 2) {
-                $color = '#ff6b6b';
-                $title = 'Penuh';
+                $color = '#ff6b6b'; $title = 'Penuh';
             } elseif ($total == 1) {
-                $color = '#ffe066';
-                $title = '1 booking';
+                $color = '#ffe066'; $title = '1 booking';
             } else {
-                $color = '#b7e4c7';
-                $title = 'Tersedia';
+                $color = '#b7e4c7'; $title = 'Tersedia';
             }
 
             $events[] = [

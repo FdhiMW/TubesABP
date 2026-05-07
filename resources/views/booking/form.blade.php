@@ -130,33 +130,33 @@
                     <p style="text-align:center; color:#8a8a8a; margin:0 0 30px; font-size:14px;">Silakan pilih paket pernikahan sesuai kebutuhan Anda.</p>
 
                     <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; margin-bottom:20px;">
-                        @foreach($packages as $key => $pkg)
+                        @foreach($packages as $pkg)
                             <label class="pkg-label" style="cursor:pointer; display:block; position:relative;">
-                                <input type="radio" name="package" value="{{ $key }}"
-                                       {{ old('package', 'basic') === $key ? 'checked' : '' }}
-                                       style="display:none;">
+                                <input type="radio" name="package_id" value="{{ $pkg->id }}"
+                                    {{ old('package_id', $packages->first()->id ?? '') == $pkg->id ? 'checked' : '' }}
+                                    style="display:none;">
 
-                                @if($pkg['is_popular'])
+                                @if($pkg->is_popular)
                                     <div style="position:absolute; top:-10px; left:50%; transform:translateX(-50%); background:#c9a861; color:white; padding:3px 12px; border-radius:10px; font-size:11px; font-weight:bold; z-index:2;">
                                         Popular
                                     </div>
                                 @endif
 
                                 <div class="pkg-card" style="border:2px solid #e8e0d8; border-radius:12px; padding:20px 16px; background:#fff; height:100%; box-sizing:border-box; text-align:center; transition:all 0.2s;">
-                                    <p style="margin:0 0 6px; color:#8a8a8a; font-size:12px; font-weight:600;">{{ $pkg['name'] }}</p>
-                                    <p style="margin:0 0 16px; color:{{ $pkg['color'] }}; font-size:26px; font-weight:bold;">{{ $pkg['price_label'] }}</p>
+                                    <p style="margin:0 0 6px; color:#8a8a8a; font-size:12px; font-weight:600;">{{ $pkg->name }}</p>
+                                    <p style="margin:0 0 16px; color:{{ $pkg->color }}; font-size:26px; font-weight:bold;">{{ $pkg->price_label }}</p>
 
                                     <ul style="margin:0 0 18px; padding:0; list-style:none; text-align:left;">
-                                        @foreach($pkg['features'] as $feature)
+                                        @foreach($pkg->features as $feature)
                                             <li style="padding:4px 0; font-size:12px; color:#444; display:flex; align-items:start; gap:6px;">
-                                                <span style="color:{{ $pkg['color'] }}; flex-shrink:0;">✓</span>
+                                                <span style="color:{{ $pkg->color }}; flex-shrink:0;">✓</span>
                                                 <span>{{ $feature }}</span>
                                             </li>
                                         @endforeach
                                     </ul>
 
                                     <div class="pkg-btn"
-                                         style="width:100%; padding:9px; background:transparent; color:{{ $pkg['color'] }}; border:1.5px solid {{ $pkg['color'] }}; border-radius:6px; font-family:Georgia, serif; font-size:13px; font-weight:bold; box-sizing:border-box;">
+                                        style="width:100%; padding:9px; background:transparent; color:{{ $pkg->color }}; border:1.5px solid {{ $pkg->color }}; border-radius:6px; font-family:Georgia, serif; font-size:13px; font-weight:bold; box-sizing:border-box;">
                                         <span class="pkg-btn-text">Pilih Paket</span>
                                         <span class="pkg-btn-selected" style="display:none;">✓ Dipilih</span>
                                     </div>
@@ -165,7 +165,7 @@
                         @endforeach
                     </div>
 
-                    @error('package')
+                    @error('package_id')
                         <p style="color:#dc3545; text-align:center; font-size:13px; margin:10px 0 0;">{{ $message }}</p>
                     @enderror
                 </div>
@@ -252,7 +252,7 @@
 </style>
 
 <script>
-    const packages = @json($packages);
+    const packages = @json($packages->keyBy('id'));
     let currentStep = 1;
 
     function renderProgress(step) {
@@ -318,8 +318,7 @@
             }
         }
         if (step === 3) {
-            const checked = document.querySelector('[name="package"]:checked');
-            if (!checked) {
+            if (!document.querySelector('[name="package_id"]:checked')) {
                 alert('Pilih salah satu paket.');
                 return false;
             }
@@ -347,21 +346,11 @@
     }
 
     function updateSummary() {
-        const date  = document.querySelector('[name="event_date"]').value;
-        const start = document.querySelector('[name="event_time"]').value;
-        const end   = document.querySelector('[name="end_time"]').value;
-        const guest = document.querySelector('[name="guest_count"]').value;
-        const pkg   = document.querySelector('[name="package"]:checked')?.value;
-
-        document.getElementById('summary-date').textContent = date
-            ? new Date(date).toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' })
-            : '-';
-        document.getElementById('summary-time').textContent  = (start && end) ? `${start} - ${end} WIB` : '-';
-        document.getElementById('summary-guest').textContent = guest ? `${guest} orang` : '-';
+        const pkg = document.querySelector('[name="package_id"]:checked')?.value;
 
         if (pkg && packages[pkg]) {
             document.getElementById('summary-pkg').textContent   = packages[pkg].name;
-            document.getElementById('summary-total').textContent = 'Rp ' + packages[pkg].price.toLocaleString('id-ID');
+            document.getElementById('summary-total').textContent = 'Rp ' + Number(packages[pkg].price).toLocaleString('id-ID');
         }
     }
 
