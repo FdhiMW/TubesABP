@@ -17,6 +17,7 @@
                 <li><a href="#facilities">Facilities</a></li>
                 <li><a href="{{ route('booking.create') }}">Booking</a></li>
                 <li><a href="{{ route('manage.index') }}">Manage</a></li>
+                <li><a href="#" id="openChatbot">AI Chatbot</a></li>
 
                 <x-admin-link variant="hero" />
 
@@ -30,6 +31,51 @@
                 @endauth
             </ul>
         </nav>
+
+        <!-- CHATBOT POPUP -->
+        <div id="chatbotModal" class="chatbot-modal">
+
+            <div class="chatbot-box">
+
+                <!-- HEADER -->
+                <div class="chatbot-header">
+                    <h3>Wedding AI Assistant</h3>
+
+                    <button id="closeChatbot">
+                        ✕
+                    </button>
+                </div>
+
+                <!-- BODY -->
+                <div id="chatMessages" class="chatbot-messages">
+
+                    <div class="bot-message">
+                        Halo 👋
+                        <br>
+                        Ada yang bisa saya bantu tentang venue?
+                    </div>
+
+                </div>
+
+                <!-- INPUT -->
+                <form id="chatForm" class="chatbot-input-area">
+
+                    <input
+                        type="text"
+                        id="chatInput"
+                        placeholder="Tanyakan sesuatu..."
+                        autocomplete="off"
+                    >
+
+                    <button type="submit">
+                        Kirim
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
 
         <div class="hero-inner">
             <div class="hero-text-content">
@@ -111,12 +157,194 @@
 
 @endsection
 
+<style>
+    .chatbot-modal {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 9999;
+
+        display: none;
+    }
+
+    .chatbot-box {
+        width: 350px;
+        height: 500px;
+
+        background: white;
+
+        border-radius: 20px;
+
+        overflow: hidden;
+
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+
+        display: flex;
+        flex-direction: column;
+    }
+
+    .chatbot-header {
+        background: #8b5e3c;
+        color: white;
+
+        padding: 15px;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .chatbot-header h3 {
+        margin: 0;
+        font-size: 18px;
+    }
+
+    .chatbot-header button {
+        background: transparent;
+        border: none;
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    .chatbot-messages {
+        flex: 1;
+
+        padding: 15px;
+
+        overflow-y: auto;
+
+        background: #f9f9f9;
+    }
+
+    .bot-message,
+    .user-message {
+        padding: 12px;
+        border-radius: 12px;
+        margin-bottom: 10px;
+        max-width: 80%;
+        line-height: 1.5;
+    }
+
+    .bot-message {
+        background: #ececec;
+    }
+
+    .user-message {
+        background: #8b5e3c;
+        color: white;
+        margin-left: auto;
+    }
+
+    .chatbot-input-area {
+        display: flex;
+        border-top: 1px solid #ddd;
+    }
+
+    .chatbot-input-area input {
+        flex: 1;
+        border: none;
+        padding: 15px;
+        outline: none;
+    }
+
+    .chatbot-input-area button {
+        background: #8b5e3c;
+        color: white;
+        border: none;
+        padding: 0 20px;
+        cursor: pointer;
+    }
+</style>
+
 @push('scripts')
 <script>
-    // Smooth scroll ke section extended saat klik scroll button
-    document.getElementById('scrollBtn').addEventListener('click', function (e) {
-        e.preventDefault();
-        document.getElementById('extended').scrollIntoView({ behavior: 'smooth' });
+    document.addEventListener('DOMContentLoaded', function () {
+        const chatbotModal = document.getElementById('chatbotModal');
+        const openChatbot = document.getElementById('openChatbot');
+        const closeChatbot = document.getElementById('closeChatbot');
+        const chatForm = document.getElementById('chatForm');
+        const chatInput = document.getElementById('chatInput');
+        const chatMessages = document.getElementById('chatMessages');
+        const scrollBtn = document.getElementById('scrollBtn');
+
+        if (scrollBtn) {
+            scrollBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.getElementById('extended').scrollIntoView({ behavior: 'smooth' });
+            });
+        }
+
+        if (openChatbot) {
+            openChatbot.addEventListener('click', function (e) {
+                e.preventDefault();
+                chatbotModal.style.display = 'block';
+            });
+        }
+
+        if (closeChatbot) {
+            closeChatbot.addEventListener('click', function () {
+                chatbotModal.style.display = 'none';
+            });
+        }
+
+        if (chatForm) {
+            chatForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                const question = chatInput.value.trim();
+                if (!question) return;
+
+                const userDiv = document.createElement('div');
+                userDiv.classList.add('user-message');
+                userDiv.innerText = question;
+                chatMessages.appendChild(userDiv);
+
+                chatInput.value = '';
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                const loadingDiv = document.createElement('div');
+                loadingDiv.classList.add('bot-message');
+                loadingDiv.innerText = 'Mengetik...';
+                chatMessages.appendChild(loadingDiv);
+
+                try {
+                    const response = await fetch('/ai/chat', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify({
+                            question: question
+                        })
+                    });
+
+                    const raw = await response.text();
+                    console.log('RAW RESPONSE:', raw);
+
+                    const data = JSON.parse(raw);
+
+                    loadingDiv.remove();
+
+                    const botDiv = document.createElement('div');
+                    botDiv.classList.add('bot-message');
+                    botDiv.innerText = data.answer || 'Maaf terjadi error';
+                    chatMessages.appendChild(botDiv);
+
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                } catch (error) {
+                    console.error(error);
+                    loadingDiv.remove();
+
+                    const errorDiv = document.createElement('div');
+                    errorDiv.classList.add('bot-message');
+                    errorDiv.innerText = 'Terjadi kesalahan server';
+                    chatMessages.appendChild(errorDiv);
+                }
+            });
+        }
     });
 </script>
 @endpush
