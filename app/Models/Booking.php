@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Constants\BookingPackage;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -19,9 +18,11 @@ class Booking extends Model
         'event_time',
         'end_time',
         'guest_count',
-        'package',          // ← BARU
+        'package_id',
         'total_price',
         'status',
+        'payment_status',
+        'midtrans_order_id',
         'payment_reference',
         'cancellation_reason',
         'cancelled_at',
@@ -34,7 +35,6 @@ class Booking extends Model
         'total_price'  => 'decimal:2',
     ];
 
-    // ── Relationships ──
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -45,14 +45,16 @@ class Booking extends Model
         return $this->belongsTo(Venue::class);
     }
 
-    // ── Helpers Paket ──
-    public function getPackageDetails(): ?array
+    public function package(): BelongsTo
     {
-        return $this->package ? BookingPackage::get($this->package) : null;
+        return $this->belongsTo(Package::class);
     }
 
+    /**
+     * Helper: nama paket untuk display (handle null).
+     */
     public function getPackageNameAttribute(): string
     {
-        return BookingPackage::name($this->package ?? 'basic');
+        return $this->package?->name ?? '-';
     }
 }

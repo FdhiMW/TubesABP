@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ManageController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SurveyController;
 use App\Http\Controllers\VenueController;
 use Illuminate\Support\Facades\Route;
@@ -40,6 +41,7 @@ Route::middleware('guest')->group(function () {
 */
 Route::get('/venue', [VenueController::class, 'show']);
 Route::get('/availability-data', [BookingController::class, 'availability']);
+Route::post('/midtrans/callback', [PaymentController::class, 'callback']);
 
 /*
 |--------------------------------------------------------------------------
@@ -61,6 +63,8 @@ Route::middleware('auth')->group(function () {
 
     // Manage
     Route::get('/manage', [ManageController::class, 'index'])->name('manage.index');
+
+    Route::get('/payment/{id}', [PaymentController::class, 'pay']);
 
     Route::post('/booking/{id}/cancel', [ManageController::class, 'cancelBooking'])->name('booking.cancel');
     Route::post('/survey/{id}/cancel',  [ManageController::class, 'cancelSurvey'])->name('survey.cancel');
@@ -94,4 +98,13 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/surveys/{id}/approve',   [AdminController::class, 'approveSurvey'])->name('surveys.approve');
     Route::post('/surveys/{id}/reject',    [AdminController::class, 'rejectSurvey'])->name('surveys.reject');
     Route::post('/surveys/{id}/complete',  [AdminController::class, 'completeSurvey'])->name('surveys.complete');
+
+    // Package Management (Admin only)
+    Route::get('/packages',                  [\App\Http\Controllers\Admin\PackageController::class, 'index'])->name('packages.index');
+    Route::get('/packages/create',           [\App\Http\Controllers\Admin\PackageController::class, 'create'])->name('packages.create');
+    Route::post('/packages',                 [\App\Http\Controllers\Admin\PackageController::class, 'store'])->name('packages.store');
+    Route::get('/packages/{package}/edit',   [\App\Http\Controllers\Admin\PackageController::class, 'edit'])->name('packages.edit');
+    Route::put('/packages/{package}',        [\App\Http\Controllers\Admin\PackageController::class, 'update'])->name('packages.update');
+    Route::delete('/packages/{package}',     [\App\Http\Controllers\Admin\PackageController::class, 'destroy'])->name('packages.destroy');
+    Route::post('/packages/{package}/toggle', [\App\Http\Controllers\Admin\PackageController::class, 'toggleActive'])->name('packages.toggle');
 });

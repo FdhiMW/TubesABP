@@ -20,8 +20,10 @@ class AdminController extends Controller
             'total_users'         => User::where('role', 'user')->count(),
             'total_venues'        => Venue::count(),
             'pending_bookings'    => Booking::where('status', 'pending')->count(),
-            'awaiting_payment'    => Booking::where('status', 'awaiting_payment')->count(),
-            'paid_bookings'       => Booking::where('status', 'paid')->count(),
+            'awaiting_payment' => Booking::where('payment_status', 'unpaid')
+                ->where('status', 'confirmed')
+                ->count(),
+            'paid_bookings'       => Booking::where('payment_status', 'paid')->count(),
             'confirmed_bookings'  => Booking::where('status', 'confirmed')->count(),
             'pending_surveys'     => Survey::where('status', 'pending')->count(),
             'confirmed_surveys'   => Survey::where('status', 'confirmed')->count(),
@@ -50,7 +52,12 @@ class AdminController extends Controller
 
         $query = Booking::with(['user', 'venue'])->latest();
 
-        if ($status !== 'all') {
+        if ($status == 'paid') {
+            $query->where('payment_status', 'paid');
+        } elseif ($status == 'awaiting_payment') {
+            $query->where('payment_status', 'unpaid')
+                ->where('status', 'confirmed');
+        } elseif ($status != 'all') {
             $query->where('status', $status);
         }
 
@@ -98,7 +105,10 @@ class AdminController extends Controller
         }
 
         DB::transaction(function () use ($booking) {
-            $booking->update(['status' => 'awaiting_payment']);
+            $booking->update([
+                'status' => 'confirmed',
+                'payment_status' => 'unpaid'
+            ]);
 
             Booking::where('venue_id', $booking->venue_id)
                 ->where('event_date', $booking->event_date)

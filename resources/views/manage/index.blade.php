@@ -53,7 +53,16 @@
     {{-- ================= BOOKING TAB ================= --}}
     <div id="booking-tab" class="tab-content" style="display:block;">
         @forelse($bookings as $b)
-            <div style="background:white; border:1px solid #e0e0e0; border-radius:8px; padding:20px; margin-bottom:15px; display:flex; gap:20px; align-items:flex-start;">
+            <div style="
+                background: {{ ($b->status == 'confirmed' && $b->payment_status == 'paid') ? '#e8f5e9' : 'white' }};
+                border: 1px solid {{ ($b->status == 'confirmed' && $b->payment_status == 'paid') ? '#a5d6a7' : '#e0e0e0' }};
+                border-radius:8px;
+                padding:20px;
+                margin-bottom:15px;
+                display:flex;
+                gap:20px;
+                align-items:flex-start;
+            ">
                 
                 {{-- VENUE ICON --}}
                 <div style="flex-shrink:0; width:60px; height:60px; background:#f5f5f5; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:28px;">
@@ -72,41 +81,64 @@
 
                 {{-- STATUS & ACTIONS --}}
                 <div style="flex-shrink:0; display:flex; flex-direction:column; align-items:flex-end; gap:10px;">
-                    @if($b->status == 'pending')
-                        <span style="background:#fff3cd; color:#856404; padding:6px 12px; border-radius:20px; font-size:12px; font-weight:500;">
-                            Menunggu
-                        </span>
-                    @elseif($b->status == 'confirmed')
-                        <span style="background:#d4edda; color:#155724; padding:6px 12px; border-radius:20px; font-size:12px; font-weight:500;">
-                            Terkonfirmasi
-                        </span>
-                    @elseif($b->status == 'cancelled')
-                        <span style="background:#f8d7da; color:#721c24; padding:6px 12px; border-radius:20px; font-size:12px; font-weight:500;">
-                            Dibatalkan
-                        </span>
-                    @else
-                        <span style="background:#e9ecef; color:#495057; padding:6px 12px; border-radius:20px; font-size:12px; font-weight:500;">
-                            {{ ucfirst($b->status) }}
-                        </span>
-                    @endif
 
+                    {{-- 🔹 BARIS ATAS: STATUS --}}
+                    <div style="display:flex; align-items:center; gap:8px;">
+
+                        {{-- STATUS BOOKING --}}
+                        @if($b->status == 'pending')
+                            <span style="background:#fff3cd; color:#856404; padding:6px 12px; border-radius:20px; font-size:12px;">
+                                Menunggu
+                            </span>
+                        @elseif($b->status == 'confirmed')
+                            <span style="background:#d4edda; color:#155724; padding:6px 12px; border-radius:20px; font-size:12px;">
+                                Terkonfirmasi
+                            </span>
+                        @elseif($b->status == 'cancelled')
+                            <span style="background:#f8d7da; color:#721c24; padding:6px 12px; border-radius:20px; font-size:12px;">
+                                Dibatalkan
+                            </span>
+                        @endif
+
+                        {{-- STATUS PAYMENT --}}
+                        @if($b->payment_status == 'paid')
+                            <span style="background:#d4edda; color:#155724; padding:6px 12px; border-radius:20px; font-size:12px;">
+                                Sudah Bayar
+                            </span>
+                        @else
+                            <span style="background:#f8d7da; color:#721c24; padding:6px 12px; border-radius:20px; font-size:12px;">
+                                Belum Bayar
+                            </span>
+                        @endif
+
+                    </div>
+
+                    {{-- 🔹 BARIS BAWAH: ACTION BUTTON --}}
                     @if($b->status == 'pending')
                         <div style="display:flex; gap:8px;">
-                            {{-- CANCEL --}}
-                            <form action="{{ route('booking.cancel', $b->id) }}" method="POST" style="margin:0;">
+                            <form action="{{ route('booking.cancel', $b->id) }}" method="POST">
                                 @csrf
-                                <button type="submit" style="background:#ffebee; color:#d32f2f; border:1px solid #ffcdd2; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:12px; font-weight:500;">
+                                <button type="submit"
+                                    style="background:#ffebee; color:#d32f2f; border:1px solid #ffcdd2; padding:6px 12px; border-radius:6px;">
                                     ✕ Batalkan
                                 </button>
                             </form>
 
-                            {{-- RESCHEDULE --}}
                             <button onclick="openReschedule('booking', {{ $b->id }}, '{{ $b->event_date }}', '{{ $b->event_time }}', '{{ $b->end_time }}')"
-                                style="background:#e8f5e9; color:#1976d2; border:1px solid #c8e6c9; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:12px; font-weight:500;">
+                                style="background:#e8f5e9; color:#1976d2; border:1px solid #c8e6c9; padding:6px 12px; border-radius:6px;">
                                 ⟲ Reschedule
                             </button>
                         </div>
                     @endif
+
+                    {{-- TOMBOL BAYAR --}}
+                    @if($b->status == 'confirmed' && $b->payment_status == 'unpaid')
+                        <button onclick="payNow({{ $b->id }})"
+                            style="background:#1976d2; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:12px;">
+                            💳 Bayar
+                        </button>
+                    @endif
+
                 </div>
             </div>
         @empty
@@ -304,6 +336,28 @@ function switchTab(tabName) {
             btn.style.borderBottomColor = 'transparent';
         }
     });
+}
+
+function payNow(id) {
+    fetch('/payment/' + id)
+        .then(response => response.json())
+        .then(data => {
+            window.snap.pay(data.token, {
+                onSuccess: function(result) {
+                    alert("Pembayaran berhasil!");
+                    location.reload();
+                },
+                onPending: function(result) {
+                    alert("Menunggu pembayaran");
+                },
+                onError: function(result) {
+                    alert("Pembayaran gagal");
+                },
+                onClose: function() {
+                    alert("Kamu menutup popup tanpa bayar");
+                }
+            });
+        });
 }
 
 // Set active tab on load
