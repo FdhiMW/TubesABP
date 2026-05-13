@@ -10,6 +10,7 @@ use App\Http\Controllers\ManageController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SurveyController;
 use App\Http\Controllers\VenueController;
+use App\Http\Controllers\AiController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -50,6 +51,10 @@ Route::post('/midtrans/callback', [PaymentController::class, 'callback']);
 */
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
+
+    // AI
+    Route::post('/ai/chat', [AiController::class, 'chat']);
+    Route::post('/ai/invitation', [AiController::class, 'invitation']);
 
     // Booking
     Route::get('/booking',        [BookingController::class, 'create'])->name('booking.create');
