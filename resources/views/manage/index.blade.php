@@ -315,6 +315,9 @@
 </style>
 
 {{-- ================= SCRIPT ================= --}}
+{{-- Midtrans Snap hanya untuk halaman ini (tidak lagi global di layout) --}}
+<script src="https://app.sandbox.midtrans.com/snap/snap.js"
+    data-client-key="{{ config('midtrans.clientKey') }}"></script>
 <script>
 function switchTab(tabName) {
     // Hide all tabs
