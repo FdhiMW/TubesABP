@@ -44,6 +44,8 @@ class _LoginScreenState extends State<LoginScreen> {
             builder: (_) => HomeScreen(
               userName: result['user']?['name'] ?? 'User',
               token: result['token'] ?? '',
+              userEmail: result['user']?['email'] ?? '',
+              userPhone: result['user']?['phone'] ?? '',
             ),
           ),
         );

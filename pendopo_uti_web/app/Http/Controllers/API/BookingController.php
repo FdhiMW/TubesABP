@@ -38,12 +38,13 @@ class BookingController extends Controller
             'booking_code' => 'BOOK-' . strtoupper(uniqid()),
             'user_id'      => $request->user()->id,
             'venue_id'     => $venue->id,
+            'package_id'   => $request->package_id,
             'event_date'   => $validated['event_date'],
             'end_date'     => $validated['end_date'] ?? $validated['event_date'],
             'event_time'   => $validated['event_time'],
             'end_time'     => $validated['end_time'],
             'guest_count'  => $validated['guest_count'],
-            'total_price'  => $venue->price_per_day * $days,
+            'total_price'  => $package->price,
             'status'       => 'pending',
         ]);
 

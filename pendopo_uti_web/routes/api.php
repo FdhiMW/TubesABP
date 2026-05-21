@@ -1,13 +1,15 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\API\BookingController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AiController;
+use App\Models\Package;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\AiController;
 
 /*
 |--------------------------------------------------------------------------
-| Public Routes (tanpa auth)
+| Public Routes
 |--------------------------------------------------------------------------
 */
 Route::post('/register', [AuthController::class, 'register']);
@@ -24,5 +26,24 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me',      [AuthController::class, 'me']);
 
-    // Nanti tambah route lain di sini...
+    // Packages untuk Flutter booking page
+    Route::get('/packages', function () {
+        return response()->json([
+            'success' => true,
+            'data'    => Package::active()->get(),
+        ]);
+    });
+
+    // Booking dari Flutter
+    Route::post('/bookings', [BookingController::class, 'store']);
+
+    // Payment Midtrans dari Flutter
+    Route::post('/bookings/{id}/payment', [BookingController::class, 'createPayment']);
 });
+
+/*
+|--------------------------------------------------------------------------
+| Midtrans Callback (public, karena dipanggil Midtrans)
+|--------------------------------------------------------------------------
+*/
+Route::post('/bookings/callback', [BookingController::class, 'callback']);
