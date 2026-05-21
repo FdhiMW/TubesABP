@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -6,6 +6,70 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans:
+        "Instrument Sans", ui-sans-serif, system-ui, sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+        "Noto Color Emoji";
+
+    /* Display serif untuk judul — nuansa elegan/editorial */
+    --font-display: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+
+    /* Palet "Luxury Editorial" — diambil dari foto venue
+       (pilar putih, dedaunan hijau, sentuhan emas hangat) */
+    --color-cream: #faf6ef; /* background terang */
+    --color-ivory: #f1e9da; /* section alternatif */
+    --color-ink: #1c2a22; /* teks utama (forest ink) */
+    --color-forest: #2c5440; /* hijau dalam */
+    --color-forest-deep: #16301f; /* footer / overlay */
+    --color-gold: #b8893f; /* aksen emas */
+    --color-gold-soft: #cda05a; /* aksen emas terang (hover) */
+
+    /* Animasi reveal halus saat halaman dimuat */
+    --animate-fade-up: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Smooth scroll untuk anchor nav (#facilities, dll) */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Cegah scroll horizontal tak sengaja di layar sempit */
+html,
+body {
+    overflow-x: hidden;
+    max-width: 100%;
+}
+
+/* ---- Utility fluid (clamp) — skala mulus tanpa loncat antar device ---- */
+@utility text-fluid-hero {
+    font-size: clamp(3rem, 11vw, 8rem);
+    line-height: 0.95;
+}
+@utility text-fluid-h2 {
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    line-height: 1.1;
+}
+@utility text-fluid-h3 {
+    font-size: clamp(1.6rem, 3.5vw, 2.5rem);
+    line-height: 1.15;
+}
+@utility py-section {
+    padding-block: clamp(4rem, 9vw, 7rem);
+}
+
+/* Gutter horizontal terpusat — dipakai semua section & navbar.
+   Dijamin tidak pernah mepet ke tepi, dan melega di layar lebar. */
+@utility site-px {
+    padding-inline: clamp(1.5rem, 5vw, 6rem);
 }

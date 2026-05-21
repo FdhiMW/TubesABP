@@ -4,7 +4,9 @@
    ================================================ */
 
 /* ---- Reset & Base ---- */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -29,7 +31,6 @@ html {
     margin: 0;
     padding: 0;
 }
-
 
 /* ================================================
    HERO SECTION (from Home.vue)
@@ -192,7 +193,6 @@ html {
     transform: translateY(4px);
 }
 
-
 /* ================================================
    EXTENDED SECTION (from HomeExt.vue)
    ================================================ */
@@ -253,7 +253,6 @@ html {
     height: auto;
     border-radius: 4px;
 }
-
 
 /* ================================================
    FOOTER (from HomeExt.vue)
@@ -333,14 +332,15 @@ html {
     justify-content: center;
     border: 1px solid #d7a94a;
     border-radius: 50%;
-    transition: background 0.2s, color 0.2s;
+    transition:
+        background 0.2s,
+        color 0.2s;
 }
 
 .social-icon:hover {
     background: #d7a94a;
     color: #14263a;
 }
-
 
 /* ================================================
    RESPONSIVE

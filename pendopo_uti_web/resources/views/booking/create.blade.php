@@ -2,7 +2,14 @@
 
 @section('title', 'Booking - Pendopo UTI')
 
+{{-- FullCalendar hanya untuk halaman ini (tidak lagi global di layout) --}}
+@push('styles')
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+@endpush
+
 @section('content')
+{{-- Library FullCalendar dimuat sebelum script inline yang memakainya --}}
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 <!-- Navigation Bar -->
 <nav style="background:#f5f1ed; padding:20px 0; border-bottom:1px solid #e8e0d8; font-family: Georgia, serif;">
     <div style="max-width:1100px; margin:0 auto; display:flex; justify-content:flex-end; align-items:center; gap:40px; padding:0 20px;">

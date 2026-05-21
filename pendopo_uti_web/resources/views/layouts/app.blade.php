@@ -9,17 +9,15 @@
     {{-- Favicon --}}
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}" />
 
-    {{-- Google Fonts --}}
+    {{-- Google Fonts: Cormorant Garamond (display) + Instrument Sans (body) --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Georgia&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    {{-- App CSS --}}
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}" />
+    {{-- Tailwind v4 (lewat Vite). Jalankan `npm run build` / `npm run dev`. --}}
+    @vite(['resources/css/app.css'])
 
-    {{-- Calender --}}
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
-
+    {{-- Aset spesifik halaman (CSS lama, FullCalendar, dll) dimuat lewat @push('styles') --}}
     @stack('styles')
 </head>
 <body>
@@ -28,9 +26,5 @@
     </div>
 
     @stack('scripts')
-
-    <script src="https://app.sandbox.midtrans.com/snap/snap.js"
-        data-client-key="{{ config('midtrans.clientKey') }}"></script>
-        
 </body>
 </html>
