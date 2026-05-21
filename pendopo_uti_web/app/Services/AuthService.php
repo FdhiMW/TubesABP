@@ -21,4 +21,22 @@ class AuthService
             'role'     => 'user',
         ]);
     }
+
+     public function login(User $user): array
+    {
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return [
+            'user'  => $user,
+            'token' => $token,
+        ];
+    }
+
+    /**
+     * Logout user
+     */
+    public function logout(User $user): void
+    {
+        $user->currentAccessToken()?->delete();
+    }
 }
