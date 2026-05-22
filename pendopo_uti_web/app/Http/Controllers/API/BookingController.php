@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Models\Package;
 use App\Models\Venue;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -21,24 +22,35 @@ class BookingController extends Controller
     {
         $validated = $request->validate([
             'venue_id'    => 'required|exists:venues,id',
+            'package_id'  => 'required|exists:packages,id',
             'event_date'  => 'required|date|after_or_equal:today',
             'end_date'    => 'nullable|date|after_or_equal:event_date',
             'event_time'  => 'required|date_format:H:i',
             'end_time'    => 'required|date_format:H:i|after:event_time',
-            'guest_count' => 'required|integer|min:1',
+            'guest_count' => 'required|integer|min:1|max:300',
+        ], [
+            'package_id.required' => 'Mohon pilih paket terlebih dahulu.',
+            'package_id.exists'   => 'Paket yang dipilih tidak valid.',
+            'guest_count.max'     => 'Jumlah tamu maksimal 300.',
         ]);
 
         $venue = Venue::findOrFail($validated['venue_id']);
 
-        $eventDate = Carbon::parse($validated['event_date']);
-        $endDate   = Carbon::parse($validated['end_date'] ?? $validated['event_date']);
-        $days      = max(1, $eventDate->diffInDays($endDate) + 1);
+        // Muat paket aktif sebelum dipakai (inilah perbaikan bug $package undefined)
+        $package = Package::active()->find($validated['package_id']);
+        if (! $package) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Paket yang dipilih sudah tidak tersedia.',
+                'errors'  => ['package_id' => ['Paket yang dipilih sudah tidak tersedia.']],
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
 
         $booking = Booking::create([
             'booking_code' => 'BOOK-' . strtoupper(uniqid()),
             'user_id'      => $request->user()->id,
             'venue_id'     => $venue->id,
-            'package_id'   => $request->package_id,
+            'package_id'   => $package->id,
             'event_date'   => $validated['event_date'],
             'end_date'     => $validated['end_date'] ?? $validated['event_date'],
             'event_time'   => $validated['event_time'],
