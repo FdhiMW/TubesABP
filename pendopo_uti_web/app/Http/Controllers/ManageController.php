@@ -4,15 +4,32 @@ namespace App\Http\Controllers;
 
 use App\Models\Booking;
 use App\Models\Survey;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Symfony\Component\HttpFoundation\Response;
 
 class ManageController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $bookings = Booking::where('user_id', auth()->id())->latest()->get();
-        $surveys = Survey::where('user_id', auth()->id())->latest()->get();
+        $bookings = Booking::with('venue')
+            ->where('user_id', auth()->id())
+            ->latest()
+            ->get();
+
+        $surveys = Survey::with('venue')
+            ->where('user_id', auth()->id())
+            ->latest()
+            ->get();
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success'  => true,
+                'bookings' => $bookings,
+                'surveys'  => $surveys,
+            ]);
+        }
 
         return view('manage.index', compact('bookings', 'surveys'));
     }
@@ -41,41 +58,41 @@ class ManageController extends Controller
     }
 
     // ================= CANCEL BOOKING =================
-    public function cancelBooking($id)
+    public function cancelBooking(Request $request, $id)
     {
         $booking = Booking::findOrFail($id);
 
         if ($booking->user_id != auth()->id()) {
-            abort(403);
+            return $this->deny($request, 'Forbidden', Response::HTTP_FORBIDDEN);
         }
 
         if ($booking->status != 'pending') {
-            return back()->withErrors('Tidak bisa cancel, sudah disetujui');
+            return $this->fail($request, 'Tidak bisa cancel, sudah disetujui');
         }
 
         $booking->status = 'cancelled';
         $booking->save();
 
-        return back()->with('success', 'Booking berhasil dibatalkan');
+        return $this->ok($request, 'Booking berhasil dibatalkan');
     }
 
     // ================= CANCEL SURVEY =================
-    public function cancelSurvey($id)
+    public function cancelSurvey(Request $request, $id)
     {
         $survey = Survey::findOrFail($id);
 
         if ($survey->user_id != auth()->id()) {
-            abort(403);
+            return $this->deny($request, 'Forbidden', Response::HTTP_FORBIDDEN);
         }
 
         if ($survey->status != 'pending') {
-            return back()->withErrors('Tidak bisa cancel, sudah disetujui');
+            return $this->fail($request, 'Tidak bisa cancel, sudah disetujui');
         }
 
         $survey->status = 'cancelled';
         $survey->save();
 
-        return back()->with('success', 'Survey berhasil dibatalkan');
+        return $this->ok($request, 'Survey berhasil dibatalkan');
     }
 
     // ================= RESCHEDULE BOOKING =================
@@ -84,11 +101,11 @@ class ManageController extends Controller
         $booking = Booking::findOrFail($id);
 
         if ($booking->user_id != auth()->id()) {
-            abort(403);
+            return $this->deny($request, 'Forbidden', Response::HTTP_FORBIDDEN);
         }
 
         if ($booking->status != 'pending') {
-            return back()->withErrors('Tidak bisa reschedule');
+            return $this->fail($request, 'Tidak bisa reschedule');
         }
 
         $request->validate([
@@ -109,7 +126,7 @@ class ManageController extends Controller
             ->count();
 
         if (($totalBooking + $totalSurvey) >= 2) {
-            return back()->withErrors('Tanggal sudah penuh');
+            return $this->fail($request, 'Tanggal sudah penuh');
         }
 
         $bookingConflict = Booking::where('venue_id', $booking->venue_id)
@@ -127,7 +144,7 @@ class ManageController extends Controller
             ->exists();
 
         if ($bookingConflict) {
-            return back()->withErrors('Waktu bentrok dengan booking lain');
+            return $this->fail($request, 'Waktu bentrok dengan booking lain');
         }
 
         $surveyConflict = Survey::where('venue_id', $booking->venue_id)
@@ -144,7 +161,7 @@ class ManageController extends Controller
             ->exists();
 
         if ($surveyConflict) {
-            return back()->withErrors('Waktu bentrok dengan jadwal survey');
+            return $this->fail($request, 'Waktu bentrok dengan jadwal survey');
         }
 
         $booking->event_date = $request->event_date;
@@ -152,6 +169,14 @@ class ManageController extends Controller
         $booking->end_time   = $request->end_time;
 
         $booking->save();
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Reschedule booking berhasil',
+                'data'    => $booking->load('venue'),
+            ]);
+        }
 
         return redirect()->route('manage.index')->with('success', 'Reschedule booking berhasil');
     }
@@ -162,11 +187,11 @@ class ManageController extends Controller
         $survey = Survey::findOrFail($id);
 
         if ($survey->user_id != auth()->id()) {
-            abort(403);
+            return $this->deny($request, 'Forbidden', Response::HTTP_FORBIDDEN);
         }
 
         if ($survey->status != 'pending') {
-            return back()->withErrors('Tidak bisa reschedule');
+            return $this->fail($request, 'Tidak bisa reschedule');
         }
 
         $request->validate([
@@ -186,7 +211,7 @@ class ManageController extends Controller
             ->count();
 
         if (($totalBooking + $totalSurvey) >= 2) {
-            return back()->withErrors('Tanggal sudah penuh');
+            return $this->fail($request, 'Tanggal sudah penuh');
         }
 
         $survey->proposed_date = $request->proposed_date;
@@ -211,7 +236,7 @@ class ManageController extends Controller
             ->exists();
 
         if ($conflict) {
-            return back()->withErrors('Waktu survey bentrok');
+            return $this->fail($request, 'Waktu survey bentrok');
         }
 
         $bookingConflict = Booking::where('venue_id', $survey->venue_id)
@@ -228,11 +253,46 @@ class ManageController extends Controller
             ->exists();
 
         if ($bookingConflict) {
-            return back()->withErrors('Waktu bentrok dengan booking venue');
+            return $this->fail($request, 'Waktu bentrok dengan booking venue');
         }
 
         $survey->save();
 
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Reschedule survey berhasil',
+                'data'    => $survey->load('venue'),
+            ]);
+        }
+
         return redirect()->route('manage.index')->with('success', 'Reschedule survey berhasil');
+    }
+
+    private function ok(Request $request, string $message): JsonResponse|\Illuminate\Http\RedirectResponse
+    {
+        if ($request->wantsJson()) {
+            return response()->json(['success' => true, 'message' => $message]);
+        }
+
+        return back()->with('success', $message);
+    }
+
+    private function fail(Request $request, string $message): JsonResponse|\Illuminate\Http\RedirectResponse
+    {
+        if ($request->wantsJson()) {
+            return response()->json(['success' => false, 'message' => $message], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        return back()->withErrors($message);
+    }
+
+    private function deny(Request $request, string $message, int $status): JsonResponse|\Illuminate\Http\Response
+    {
+        if ($request->wantsJson()) {
+            return response()->json(['success' => false, 'message' => $message], $status);
+        }
+
+        abort($status, $message);
     }
 }

@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'manage_page.dart';
+import 'ketersediaan_page.dart';
+import 'survey_page.dart';
 
 class BookingPackage {
   final int id;
@@ -100,6 +103,7 @@ class BookingApi {
   }
 }
 
+/// Halaman Booking umum (hub menu) — venue form dibuka dari sini.
 class BookingPage extends StatefulWidget {
   const BookingPage({
     super.key,
@@ -108,6 +112,7 @@ class BookingPage extends StatefulWidget {
     required this.userName,
     required this.userEmail,
     required this.userPhone,
+    this.openVenueDirectly = false,
   });
 
   final String baseUrl;
@@ -115,12 +120,68 @@ class BookingPage extends StatefulWidget {
   final String userName;
   final String userEmail;
   final String userPhone;
+  final bool openVenueDirectly;
 
   @override
-  State<BookingPage> createState() => _BookingPageState();
+  State<BookingPage> createState() => _BookingPageRootState();
 }
 
-class _BookingPageState extends State<BookingPage> {
+class _BookingPageRootState extends State<BookingPage> {
+  late bool _showVenueForm;
+
+  @override
+  void initState() {
+    super.initState();
+    _showVenueForm = widget.openVenueDirectly;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_showVenueForm) {
+      return _BookingVenueFormScreen(
+        baseUrl: widget.baseUrl,
+        token: widget.token,
+        userName: widget.userName,
+        userEmail: widget.userEmail,
+        userPhone: widget.userPhone,
+        onBackToHub: () => setState(() => _showVenueForm = false),
+      );
+    }
+
+    return _BookingHubScreen(
+      baseUrl: widget.baseUrl,
+      token: widget.token,
+      userName: widget.userName,
+      userEmail: widget.userEmail,
+      userPhone: widget.userPhone,
+      onBookVenue: () => setState(() => _showVenueForm = true),
+    );
+  }
+}
+
+/// Form multi-step booking venue (logika lama).
+class _BookingVenueFormScreen extends StatefulWidget {
+  const _BookingVenueFormScreen({
+    required this.baseUrl,
+    required this.token,
+    required this.userName,
+    required this.userEmail,
+    required this.userPhone,
+    this.onBackToHub,
+  });
+
+  final String baseUrl;
+  final String token;
+  final String userName;
+  final String userEmail;
+  final String userPhone;
+  final VoidCallback? onBackToHub;
+
+  @override
+  State<_BookingVenueFormScreen> createState() => _BookingVenueFormScreenState();
+}
+
+class _BookingVenueFormScreenState extends State<_BookingVenueFormScreen> {
   late final BookingApi api;
 
   int currentStep = 0;
@@ -143,7 +204,6 @@ class _BookingPageState extends State<BookingPage> {
   void initState() {
     super.initState();
     api = BookingApi(baseUrl: widget.baseUrl, token: widget.token);
-
     fullNameController.text = widget.userName;
     emailController.text = widget.userEmail;
     phoneController.text = widget.userPhone;
@@ -246,6 +306,8 @@ class _BookingPageState extends State<BookingPage> {
   void previousStep() {
     if (currentStep > 0) {
       setState(() => currentStep--);
+    } else if (widget.onBackToHub != null) {
+      widget.onBackToHub!();
     } else {
       Navigator.pop(context);
     }
@@ -289,7 +351,11 @@ class _BookingPageState extends State<BookingPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(message)),
         );
-        Navigator.pop(context); // kembali ke Home page Flutter
+        if (widget.onBackToHub != null) {
+          widget.onBackToHub!();
+        } else {
+          Navigator.pop(context);
+        }
       } else {
         final errors = body['errors'];
         if (errors is Map && errors.isNotEmpty) {
@@ -881,6 +947,10 @@ class _BookingPageState extends State<BookingPage> {
         elevation: 0,
         backgroundColor: const Color(0xFFF7F3EE),
         centerTitle: false,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Color(0xFF0B3B34)),
+          onPressed: previousStep,
+        ),
         title: const Text(
           'Booking Venue',
           style: TextStyle(
@@ -913,6 +983,439 @@ class _BookingPageState extends State<BookingPage> {
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+// =============================================================================
+// BOOKING HUB — menu umum (Figma)
+// =============================================================================
+class _BookingHubScreen extends StatelessWidget {
+  const _BookingHubScreen({
+    required this.baseUrl,
+    required this.token,
+    required this.userName,
+    required this.userEmail,
+    required this.userPhone,
+    required this.onBookVenue,
+  });
+
+  final String baseUrl;
+  final String token;
+  final String userName;
+  final String userEmail;
+  final String userPhone;
+  final VoidCallback onBookVenue;
+
+  static const Color ricePaper = Color(0xFFFAFAF5);
+  static const Color heritageGreen = Color(0xFF2D4B37);
+  static const Color batikGold = Color(0xFFD4A373);
+  static const Color onSurfaceVariant = Color(0xFF424843);
+  static const Color outlineVariant = Color(0xFFC2C8C0);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: ricePaper,
+      appBar: AppBar(
+        backgroundColor: ricePaper,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.menu, color: heritageGreen),
+          onPressed: () {},
+        ),
+        title: const Text(
+          'Pendopo Uti',
+          style: TextStyle(
+            fontFamily: 'serif',
+            fontSize: 22,
+            fontWeight: FontWeight.w600,
+            color: heritageGreen,
+          ),
+        ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search, color: heritageGreen),
+            onPressed: () {},
+          ),
+        ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: Container(height: 1, color: outlineVariant.withOpacity(0.3)),
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SizedBox(
+              height: 420,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Image.asset(
+                    'assets/images/hero.png',
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => Container(color: heritageGreen),
+                  ),
+                  Container(color: Colors.black.withOpacity(0.4)),
+                  Positioned(
+                    left: 20,
+                    right: 20,
+                    bottom: 48,
+                    child: Column(
+                      children: [
+                        Text(
+                          'Plan Your',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontFamily: 'serif',
+                            fontSize: 36,
+                            fontWeight: FontWeight.w600,
+                            color: batikGold,
+                            height: 1.1,
+                            shadows: [
+                              Shadow(
+                                color: Colors.black.withOpacity(0.35),
+                                blurRadius: 8,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Text(
+                          'Dream Wedding',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontFamily: 'serif',
+                            fontSize: 36,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                            height: 1.1,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 32, 20, 16),
+              child: Column(
+                children: [
+                  _goldDivider(context),
+                  const SizedBox(height: 16),
+                  _menuCard(
+                    icon: Icons.calendar_month,
+                    title: 'Lihat Ketersediaan Tanggal',
+                    description:
+                        'Cek jadwal kosong untuk hari bahagia Anda secara real-time dan kunci tanggal favorit Anda segera.',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => KetersediaanPage(baseUrl: baseUrl),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  _menuCard(
+                    icon: Icons.apartment,
+                    title: 'Book a Venue',
+                    description:
+                        'Pilih area pendopo atau taman sesuai tema pernikahan Anda.',
+                    onTap: onBookVenue,
+                  ),
+                  const SizedBox(height: 16),
+                  _menuCard(
+                    icon: Icons.assignment,
+                    title: 'Book a Survey',
+                    description:
+                        'Konsultasikan konsep pernikahan Anda langsung di lokasi bersama tim kami.',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => SurveyPage(
+                            baseUrl: baseUrl,
+                            token: token,
+                            userName: userName,
+                            userEmail: userEmail,
+                            userPhone: userPhone,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 24, 20, 32),
+              child: Column(
+                children: [
+                  _goldDivider(context),
+                  const SizedBox(height: 32),
+                  GridView.count(
+                    crossAxisCount: 2,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    mainAxisSpacing: 32,
+                    crossAxisSpacing: 16,
+                    childAspectRatio: 1.6,
+                    children: const [
+                      _StatTile(value: '150+', label: 'Weddings Hosted'),
+                      _StatTile(value: '1k+', label: 'Happy Guests'),
+                      _StatTile(value: '24/7', label: 'Online Booking'),
+                      _StatTile(value: '4.9', label: 'Avg. Rating'),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 88),
+          ],
+        ),
+      ),
+      bottomNavigationBar: _BookingBottomNav(
+        currentIndex: 2,
+        baseUrl: baseUrl,
+        token: token,
+        userName: userName,
+        userEmail: userEmail,
+        userPhone: userPhone,
+        onFacilities: () => Navigator.pop(context),
+      ),
+    );
+  }
+
+  Widget _goldDivider(BuildContext context) {
+    return Center(
+      child: Container(
+        width: MediaQuery.sizeOf(context).width * 0.66,
+        height: 1,
+        color: batikGold.withOpacity(0.3),
+      ),
+    );
+  }
+
+  Widget _menuCard({
+    required IconData icon,
+    required String title,
+    required String description,
+    required VoidCallback onTap,
+  }) {
+    return Material(
+      color: ricePaper,
+      borderRadius: BorderRadius.circular(12),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: ricePaper,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: batikGold.withOpacity(0.4)),
+            boxShadow: [
+              BoxShadow(
+                color: heritageGreen.withOpacity(0.08),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: heritageGreen,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(icon, color: ricePaper, size: 26),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontFamily: 'serif',
+                        fontSize: 17,
+                        fontWeight: FontWeight.w600,
+                        color: heritageGreen,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      description,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        height: 1.4,
+                        color: onSurfaceVariant,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.chevron_right, color: heritageGreen),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _StatTile extends StatelessWidget {
+  const _StatTile({required this.value, required this.label});
+
+  final String value;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          value,
+          style: const TextStyle(
+            fontFamily: 'serif',
+            fontSize: 28,
+            fontWeight: FontWeight.w600,
+            color: _BookingHubScreen.heritageGreen,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          label.toUpperCase(),
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            fontSize: 11,
+            letterSpacing: 0.8,
+            fontWeight: FontWeight.w500,
+            color: _BookingHubScreen.onSurfaceVariant,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _BookingBottomNav extends StatelessWidget {
+  const _BookingBottomNav({
+    required this.currentIndex,
+    required this.baseUrl,
+    required this.token,
+    required this.userName,
+    required this.userEmail,
+    required this.userPhone,
+    this.onFacilities,
+  });
+
+  final int currentIndex;
+  final String baseUrl;
+  final String token;
+  final String userName;
+  final String userEmail;
+  final String userPhone;
+  final VoidCallback? onFacilities;
+
+  @override
+  Widget build(BuildContext context) {
+    const heritageGreen = _BookingHubScreen.heritageGreen;
+
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(top: BorderSide(color: Colors.grey.shade200)),
+      ),
+      child: SafeArea(
+        child: SizedBox(
+          height: 72,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _navItem(context, 0, Icons.home_rounded, 'Home', currentIndex == 0, heritageGreen, () {
+                Navigator.popUntil(context, (route) => route.isFirst);
+              }),
+              _navItem(context, 1, Icons.apartment, 'Facilities', currentIndex == 1, heritageGreen, () {
+                if (onFacilities != null) {
+                  onFacilities!();
+                } else {
+                  Navigator.popUntil(context, (route) => route.isFirst);
+                }
+              }),
+              _navItem(context, 2, Icons.calendar_month_rounded, 'Booking', currentIndex == 2, heritageGreen, () {}),
+              _navItem(context, 3, Icons.dashboard_rounded, 'Manage', currentIndex == 3, heritageGreen, () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => ManagePage(
+                      baseUrl: baseUrl,
+                      token: token,
+                      userName: userName,
+                      userEmail: userEmail,
+                      userPhone: userPhone,
+                    ),
+                  ),
+                );
+              }),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _navItem(
+    BuildContext context,
+    int index,
+    IconData icon,
+    String label,
+    bool selected,
+    Color activeColor,
+    VoidCallback onTap,
+  ) {
+    return InkWell(
+      onTap: onTap,
+      child: SizedBox(
+        width: 72,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+              decoration: selected
+                  ? BoxDecoration(
+                      color: const Color(0xFFE7F3E8),
+                      borderRadius: BorderRadius.circular(24),
+                    )
+                  : null,
+              child: Icon(icon, size: 24, color: selected ? activeColor : Colors.grey.shade400),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: selected ? FontWeight.bold : FontWeight.w500,
+                color: selected ? activeColor : Colors.grey.shade400,
+              ),
+            ),
+          ],
         ),
       ),
     );

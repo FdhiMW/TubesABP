@@ -2,9 +2,12 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\API\BookingController;
+use App\Http\Controllers\BookingController as WebBookingController;
+use App\Http\Controllers\ManageController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\SurveyController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Package;
-use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\AiController;
 
 /*
@@ -14,6 +17,9 @@ use App\Http\Controllers\AiController;
 */
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login',    [AuthController::class, 'login']);
+
+// Ketersediaan kalender (sama dengan web `/availability-data`, untuk Flutter + CORS api/*)
+Route::get('/availability-data', [WebBookingController::class, 'availability']);
 
 /*
 |--------------------------------------------------------------------------
@@ -37,8 +43,22 @@ Route::middleware('auth:sanctum')->group(function () {
     // Booking dari Flutter
     Route::post('/bookings', [BookingController::class, 'store']);
 
+    // Survey gedung — SurveyController (sama web survey.store)
+    Route::post('/surveys', [SurveyController::class, 'store']);
+
     // Payment Midtrans dari Flutter
     Route::post('/bookings/{id}/payment', [BookingController::class, 'createPayment']);
+
+    // Manage — controller yang sama dengan web (ManageController)
+    Route::get('/manage', [ManageController::class, 'index']);
+    Route::post('/booking/{id}/cancel', [ManageController::class, 'cancelBooking']);
+    Route::post('/survey/{id}/cancel', [ManageController::class, 'cancelSurvey']);
+    Route::post('/booking/{id}/reschedule', [ManageController::class, 'rescheduleBooking']);
+    Route::post('/survey/{id}/reschedule', [ManageController::class, 'rescheduleSurvey']);
+    Route::get('/payment/{id}', [PaymentController::class, 'pay']);
+
+    // AI Chatbot — AiController (sama web POST /ai/chat)
+    Route::post('/ai/chat', [AiController::class, 'chat']);
 });
 
 /*
