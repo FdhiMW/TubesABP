@@ -3,6 +3,7 @@ import 'ai_chat_sheet.dart';
 import 'booking_page.dart';
 import 'login_screen.dart';
 import 'manage_page.dart';
+import 'package:pendopo_uti_mobile/screens/venue_map_page.dart';
 import '../services/auth_service.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -53,13 +54,22 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
+  void _navigateToMaps(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => VenueMapPage(),
+      ),
+    );
+  }
+
   // Fungsi untuk pergi ke ManagePage
   void _navigateToManage(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
       builder: (_) => ManagePage(
-      baseUrl: 'http://192.168.18.10:8000/api', // PASTIKAN BARIS INI DITAMBAHKAN
+      baseUrl: 'http://192.168.0.101:8000/api', // PASTIKAN BARIS INI DITAMBAHKAN
       token: token,
       userName: userName,
       userEmail: userEmail,
@@ -239,6 +249,33 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 16),
+
+                      // Tombol Maps
+                      SizedBox(
+                        width: double.infinity,
+                        height: 50,
+                        child: ElevatedButton.icon(
+                          onPressed: () => _navigateToMaps(context),
+                          icon: const Icon(Icons.map),
+                          label: const Text(
+                            'LIHAT LOKASI',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1.5,
+                              fontSize: 13,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: brandDark,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
                       // Tombol Lihat Fasilitas
                       SizedBox(
                         width: double.infinity,
