@@ -74,4 +74,28 @@ class AuthService {
       'message': data['message'] ?? 'Registrasi gagal',
     };
   }
+
+  static Future<Map<String, dynamic>> saveFcmToken({
+    required String token,
+    required String fcmToken,
+  }) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/save-fcm-token'),
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: {
+        'fcm_token': fcmToken,
+      },
+    );
+
+    print('STATUS: ${response.statusCode}');
+    print('BODY: ${response.body}');
+
+    return {
+      'status': response.statusCode,
+      'body': response.body,
+    };
+  }
 }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "343922145540",
+    "project_id": "pendopo-uti-d19f2",
+    "storage_bucket": "pendopo-uti-d19f2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:343922145540:android:7f882b70c42c80b5aab851",
+        "android_client_info": {
+          "package_name": "com.example.pendopo_uti_mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZFpfoJKb9Clt_-LBwWlXBZK7ShAPcTFY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

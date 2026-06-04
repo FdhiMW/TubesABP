@@ -59,6 +59,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // AI Chatbot — AiController (sama web POST /ai/chat)
     Route::post('/ai/chat', [AiController::class, 'chat']);
+
+    // Notifikasi
+    Route::post('/save-fcm-token', [AuthController::class, 'saveFcmToken']);
+    Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
 });
 
 /*
