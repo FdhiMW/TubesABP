@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Package;
-use App\Models\Venue;
 use Illuminate\Database\Seeder;
 
 class PackageSeeder extends Seeder
@@ -77,13 +76,5 @@ class PackageSeeder extends Seeder
         foreach ($packages as $pkg) {
             Package::updateOrCreate(['slug' => $pkg['slug']], $pkg);
         }
-
-        // Daftarkan semua paket ke setiap venue (relasi many-to-many).
-        // Saat fitur per-venue dibutuhkan, atur subset paket per venue di sini.
-        $packageIds = Package::pluck('id')->all();
-
-        Venue::all()->each(function (Venue $venue) use ($packageIds) {
-            $venue->packages()->syncWithoutDetaching($packageIds);
-        });
     }
 }

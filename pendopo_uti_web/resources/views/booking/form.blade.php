@@ -5,34 +5,6 @@
 @section('content')
 
 {{-- ========== TOP NAVBAR ========== --}}
-<nav style="background:#f5f1ed; padding:18px 0; border-bottom:1px solid #e8e0d8; font-family:Georgia, serif; position:sticky; top:0; z-index:100;">
-    <div style="max-width:1200px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; padding:0 30px;">
-        <a href="{{ url('/') }}" style="text-decoration:none;">
-            <span style="color:#0b3120; font-size:22px; font-weight:bold; letter-spacing:1px;">PENDOPO UTI</span>
-        </a>
-        <div style="display:flex; gap:35px; align-items:center;">
-            <a href="{{ url('/') }}" style="color:#8a8a8a; text-decoration:none; font-size:15px;">Home</a>
-            <a href="{{ url('/#facilities') }}" style="color:#8a8a8a; text-decoration:none; font-size:15px;">Facilities</a>
-            <a href="{{ route('booking.create') }}" style="color:#0b3120; text-decoration:none; font-size:15px; font-weight:600;">Booking</a>
-            <a href="{{ route('manage.index') }}" style="color:#8a8a8a; text-decoration:none; font-size:15px;">Manage</a>
-
-            @auth
-                @if(auth()->user()->role === 'admin')
-                    <a href="{{ route('admin.dashboard') }}"
-                       style="background:#d4af37; color:#0b3120; text-decoration:none; padding:8px 16px; border-radius:4px; font-size:14px; font-weight:bold;">
-                        🛡️ Admin Panel
-                    </a>
-                @endif
-                <form method="POST" action="{{ route('logout') }}" style="margin:0;">
-                    @csrf
-                    <button type="submit" style="background:transparent; border:1px solid #8a8a8a; color:#8a8a8a; padding:8px 16px; border-radius:4px; cursor:pointer; font-family:Georgia, serif; font-size:14px;">
-                        Logout
-                    </button>
-                </form>
-            @endauth
-        </div>
-    </div>
-</nav>
 
 <div style="min-height:calc(100vh - 70px); background:#f5f1ed; font-family:Georgia, serif; padding:50px 20px;">
     <div style="max-width:760px; margin:0 auto;">

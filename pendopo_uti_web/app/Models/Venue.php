@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Venue extends Model
@@ -33,13 +32,5 @@ class Venue extends Model
     public function surveys(): HasMany
     {
         return $this->hasMany(Survey::class);
-    }
-
-    /**
-     * Paket-paket yang ditawarkan di venue ini (many-to-many).
-     */
-    public function packages(): BelongsToMany
-    {
-        return $this->belongsToMany(Package::class)->withTimestamps();
     }
 }
