@@ -12,7 +12,7 @@
         </a>
         <div style="display:flex; gap:35px; align-items:center;">
             <a href="{{ url('/') }}" style="color:#8a8a8a; text-decoration:none; font-size:15px;">Home</a>
-            <a href="{{ url('/#facilities') }}" style="color:#8a8a8a; text-decoration:none; font-size:15px;">Facilities</a>
+            <a href="{{ route('facilities') }}" style="color:#8a8a8a; text-decoration:none; font-size:15px;">Facilities</a>
             <a href="{{ route('booking.create') }}" style="color:#0b3120; text-decoration:none; font-size:15px; font-weight:600;">Booking</a>
             <a href="{{ route('manage.index') }}" style="color:#8a8a8a; text-decoration:none; font-size:15px;">Manage</a>
 

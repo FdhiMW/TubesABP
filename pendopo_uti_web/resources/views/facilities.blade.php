@@ -1,13 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Pendopo UTI — Wedding Venue')
+@section('title', 'Facilities - Pendopo UTI')
 
 @section('content')
-    {{-- ============================================================
-         Halaman ini di-redesign penuh dengan Tailwind v4.
-         Class lama (.hero/.feature/dst) tidak lagi dipakai.
-         Semua route & ID chatbot tetap dipertahankan.
-    ============================================================ --}}
     <div id="top" class="font-sans text-ink antialiased">
 
         {{-- ===================== NAVBAR ===================== --}}
@@ -24,7 +19,7 @@
 
                 {{-- Menu desktop --}}
                 <ul class="hidden items-center gap-7 text-sm font-medium tracking-wide text-white lg:flex xl:gap-9">
-                    <li><a href="#top" class="transition-colors hover:text-gold-soft">Home</a></li>
+                    <li><a href="{{ route('home') }}" class="transition-colors hover:text-gold-soft">Home</a></li>
                     <li><a href="{{ route('facilities') }}" class="transition-colors hover:text-gold-soft">Facilities</a></li>
                     <li><a href="{{ route('booking.create') }}" class="transition-colors hover:text-gold-soft">Booking</a></li>
                     <li><a href="{{ route('manage.index') }}" class="transition-colors hover:text-gold-soft">Manage</a></li>
@@ -66,7 +61,7 @@
             <div id="navMenu"
                  class="hidden border-t border-white/10 bg-forest-deep/95 backdrop-blur lg:hidden">
                 <ul class="flex flex-col gap-1 px-5 py-4 text-white">
-                    <li><a href="#top" class="block rounded-md px-3 py-3 transition-colors hover:bg-white/10">Home</a></li>
+                    <li><a href="{{ route('home') }}" class="block rounded-md px-3 py-3 transition-colors hover:bg-white/10">Home</a></li>
                     <li><a href="{{ route('facilities') }}" class="block rounded-md px-3 py-3 transition-colors hover:bg-white/10">Facilities</a></li>
                     <li><a href="{{ route('booking.create') }}" class="block rounded-md px-3 py-3 transition-colors hover:bg-white/10">Booking</a></li>
                     <li><a href="{{ route('manage.index') }}" class="block rounded-md px-3 py-3 transition-colors hover:bg-white/10">Manage</a></li>
@@ -90,134 +85,62 @@
             </div>
         </nav>
 
-        {{-- ===================== HERO ===================== --}}
-        <header class="relative flex min-h-dvh flex-col justify-center overflow-hidden pt-20">
-            {{-- Background + overlay gradient untuk kontras teks (WCAG) --}}
-            <img src="{{ asset('asset/images/hero.png') }}" alt=""
-                 class="absolute inset-0 h-full w-full object-cover" loading="eager">
-            <div class="absolute inset-0 bg-gradient-to-b from-forest-deep/80 via-forest-deep/40 to-forest-deep/85"></div>
-            <div class="absolute inset-0 bg-gradient-to-r from-forest-deep/70 to-transparent"></div>
-
-            {{-- Konten hero --}}
-            <div class="relative z-10 mx-auto w-full max-w-7xl site-px">
-                <div class="max-w-xl text-white [animation:var(--animate-fade-up)] lg:max-w-2xl">
-                    {{-- Eyebrow dengan garis aksen --}}
-                    <div class="flex items-center gap-4">
-                        <span class="h-px w-12 bg-gold-soft"></span>
-                        <p class="text-xs font-semibold uppercase tracking-[0.3em] text-gold-soft">
-                            Welcome To
-                        </p>
-                    </div>
-
-                    <h1 class="mt-6 text-fluid-hero font-display font-semibold tracking-tight text-balance drop-shadow-lg">
-                        Pendopo UTI
-                    </h1>
-
-                    <p class="mt-4 font-display text-2xl font-light italic text-cream/90 md:text-3xl">
-                        Wedding Venue
-                    </p>
-
-                    <p class="mt-6 max-w-md text-pretty text-base leading-relaxed text-cream/85 md:text-lg">
-                        Booking sekarang dan dapatkan pengalaman pernikahan yang sempurna
-                        di tengah arsitektur klasik yang megah dan asri.
-                    </p>
-
-                    <div class="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center">
-                        {{-- Tombol utama --}}
-                        <a href="{{ route('booking.create') }}"
-                           class="group inline-flex h-[3.25rem] w-full items-center justify-center gap-2 rounded-full bg-gold px-8 text-xs font-semibold uppercase tracking-[0.15em] text-white shadow-lg shadow-black/25 transition-all hover:-translate-y-0.5 hover:bg-gold-soft hover:shadow-xl sm:w-auto">
-                            Book Now
-                            <svg class="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-                            </svg>
-                        </a>
-                        {{-- Tombol sekunder --}}
-                        <a href="{{ route('facilities') }}"
-                           class="inline-flex h-[3.25rem] w-full items-center justify-center gap-2 rounded-full border border-white/50 bg-white/5 px-8 text-xs font-semibold uppercase tracking-[0.15em] text-white backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:border-gold-soft hover:bg-white/10 hover:text-gold-soft sm:w-auto">
-                            Lihat Fasilitas
-                        </a>
-                    </div>
+        {{-- HERO SECTION --}}
+        <header class="relative flex min-h-dvh flex-col justify-center overflow-hidden pt-20 bg-forest-deep">
+            <img src="{{ asset('asset/images/120539-kofr3vthh0j1 1.png') }}" alt="" class="absolute inset-0 h-full w-full object-cover" loading="eager">
+            <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/60"></div>
+            <div class="relative z-10 mx-auto w-full max-w-7xl site-px text-center">
+                <div class="flex flex-col items-center gap-2">
+                    <p class="text-sm uppercase tracking-widest text-gold-soft">Welcome To</p>
+                    <h1 class="text-5xl md:text-6xl font-display font-semibold text-cream drop-shadow-xl">FACILITIES</h1>
                 </div>
             </div>
-
-            {{-- Scroll indicator --}}
-            <a href="{{ route('facilities') }}"
-               class="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-white/80 transition-colors hover:text-white">
-                <span class="text-xs uppercase tracking-[0.3em]">Scroll</span>
-                <span class="flex h-10 w-10 animate-bounce items-center justify-center rounded-full border-2 border-white/60">
-                    <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                    </svg>
-                </span>
-            </a>
         </header>
 
-        {{-- ===================== FACILITIES ===================== --}}
-        <section id="facilities" class="bg-cream py-section">
+        {{-- CONTENT SECTION --}}
+        <main class="bg-cream py-32">
             <div class="mx-auto max-w-7xl site-px">
-                {{-- Heading --}}
+                {{-- Heading section --}}
                 <div class="mx-auto max-w-2xl text-center">
-                    <p class="text-xs font-semibold uppercase tracking-[0.3em] text-gold">Our Facilities</p>
-                    <h2 class="mt-3 text-fluid-h2 font-display font-semibold text-balance text-ink">
-                        Ruang megah untuk momen tak terlupakan
-                    </h2>
-                    <div class="mx-auto mt-6 h-px w-24 bg-gold/60"></div>
+                    <h2 class="text-4xl font-display font-semibold text-ink text-balance">FACILITIES</h2>
+                    <div class="mx-auto mt-8 h-1 w-16 bg-gold/60"></div>
+                    <p class="mt-10 text-pretty text-ink/70">We want your stay at our venue to be truly unforgettable. That is why we give special attention to all of your needs so that we can ensure an experience quite unique. Luxury hotels offers the perfect setting with stunning views for leisure and our modern luxury resort facilities will help you enjoy the best of all.</p>
                 </div>
 
-                {{-- Feature list --}}
-                <div class="mt-12 flex flex-col gap-12 sm:mt-16 lg:gap-24">
-                    {{-- Feature 1 --}}
-                    <article class="grid items-center gap-6 sm:gap-8 lg:grid-cols-2 lg:gap-14">
-                        <div class="order-2 lg:order-1">
-                            <h3 class="text-fluid-h3 font-display font-semibold text-ink">Elegan &amp; Berkelas</h3>
-                            <p class="mt-4 text-pretty leading-relaxed text-ink/70">
-                                Menghadirkan suasana elegan dengan desain arsitektur klasik yang dipadukan
-                                sentuhan modern. Lorong luas dengan pilar-pilar megah serta pencahayaan
-                                alami menjadikannya tempat ideal untuk berbagai acara.
-                            </p>
+                {{-- Image blocks --}}
+                <div class="mt-40 space-y-32">
+                    {{-- Pendopo image block --}}
+                    <div class="mx-auto w-full max-w-4xl pt-8 pb-20">
+                        <div class="relative overflow-visible">
+                            <img src="{{ asset('asset/images/pendopo.png') }}" alt="Pendopo" class="w-full h-72 object-cover shadow-xl">
+                            <div class="absolute left-1/2 -translate-x-1/2 bottom-0 translate-y-1/2">
+                                <div class="bg-white px-10 py-3 font-semibold shadow-lg text-ink text-sm tracking-wide">PENDOPO</div>
+                            </div>
                         </div>
-                        <div class="group order-1 overflow-hidden rounded-2xl shadow-xl lg:order-2">
-                            <img src="{{ asset('asset/images/colonnade.png') }}" alt="Lorong berpilar Pendopo UTI"
-                                 class="aspect-[4/3] w-full object-cover transition-transform duration-700 group-hover:scale-105 sm:aspect-[16/10] lg:aspect-[4/3]" loading="lazy">
-                        </div>
-                    </article>
+                    </div>
 
-                    {{-- Feature 2 (gambar di kiri pada desktop) --}}
-                    <article class="grid items-center gap-6 sm:gap-8 lg:grid-cols-2 lg:gap-14">
-                        <div class="group order-1 overflow-hidden rounded-2xl shadow-xl">
-                            <img src="{{ asset('asset/images/wedding1.png') }}" alt="Dekorasi pernikahan di Pendopo UTI"
-                                 class="aspect-[4/3] w-full object-cover transition-transform duration-700 group-hover:scale-105 sm:aspect-[16/10] lg:aspect-[4/3]" loading="lazy">
+                    {{-- Poolside image block --}}
+                    <div class="mx-auto w-full max-w-4xl pt-8 pb-20">
+                        <div class="relative overflow-visible">
+                            <img src="{{ asset('asset/images/poolside.png') }}" alt="Poolside bar" class="w-full h-72 object-cover shadow-xl">
+                            <div class="absolute left-1/2 -translate-x-1/2 bottom-0 translate-y-1/2">
+                                <div class="bg-white px-10 py-3 font-semibold shadow-lg text-ink text-sm tracking-wide">POOLSIDE BAR</div>
+                            </div>
                         </div>
-                        <div class="order-2">
-                            <h3 class="text-fluid-h3 font-display font-semibold text-ink">Momen Bahagia Tak Terlupakan</h3>
-                            <p class="mt-4 text-pretty leading-relaxed text-ink/70">
-                                Tempat ini menghadirkan pengalaman sederhana namun berkesan, di mana setiap
-                                langkah terasa ringan dan penuh ketenangan — sempurna untuk merayakan
-                                hari paling istimewa dalam hidup Anda.
-                            </p>
+                    </div>
+
+                    {{-- Spa image block --}}
+                    <div class="mx-auto w-full max-w-4xl pt-8 pb-20">
+                        <div class="relative overflow-visible">
+                            <img src="{{ asset('asset/images/spa.png') }}" alt="The spa" class="w-full h-72 object-cover shadow-xl">
+                            <div class="absolute left-1/2 -translate-x-1/2 bottom-0 translate-y-1/2">
+                                <div class="bg-white px-10 py-3 font-semibold shadow-lg text-ink text-sm tracking-wide">THE SPA</div>
+                            </div>
                         </div>
-                    </article>
+                    </div>
                 </div>
             </div>
-        </section>
-
-        {{-- ===================== CTA BAND ===================== --}}
-        <section id="book" class="relative overflow-hidden bg-forest-deep py-section text-center">
-            <div class="absolute inset-0 opacity-10"
-                 style="background-image: radial-gradient(circle at 1px 1px, #fff 1px, transparent 0); background-size: 28px 28px;"></div>
-            <div class="relative mx-auto max-w-2xl site-px">
-                <h2 class="text-fluid-h2 font-display font-semibold text-balance text-cream">
-                    Siap merencanakan hari istimewa Anda?
-                </h2>
-                <p class="mt-4 text-pretty text-cream/70">
-                    Pesan jadwal survey atau booking venue sekarang — tim kami siap membantu.
-                </p>
-                <a href="{{ route('booking.create') }}"
-                   class="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gold px-8 py-4 text-sm font-semibold uppercase tracking-wider text-white transition-all hover:-translate-y-0.5 hover:bg-gold-soft sm:w-auto">
-                    Mulai Booking
-                </a>
-            </div>
-        </section>
+        </main>
 
         {{-- ===================== FOOTER ===================== --}}
         <footer id="contact" class="bg-ink text-cream/80">
@@ -388,7 +311,6 @@
                 bubble(question, 'user');
                 chatInput.value = '';
 
-                // State loading dengan animasi titik
                 const loading = bubble('Mengetik…', 'bot');
                 loading.classList.add('animate-pulse', 'text-ink/50');
 
@@ -398,18 +320,16 @@
                         headers: {
                             'Content-Type': 'application/json',
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                            'X-Requested-With': 'XMLHttpRequest'
                         },
-                        body: JSON.stringify({ question })
+                        body: JSON.stringify({ message: question }),
                     });
                     const data = await response.json();
                     loading.remove();
-                    bubble(data.answer || 'Maaf, terjadi kesalahan.', 'bot');
+                    bubble(data.reply || 'Maaf, terjadi kesalahan.', 'bot');
                 } catch (error) {
-                    console.error(error);
                     loading.remove();
-                    const err = bubble('⚠️ Tidak dapat terhubung ke server. Coba lagi.', 'bot');
-                    err.classList.add('bg-red-50', 'text-red-700');
+                    bubble('Maaf, terjadi kesalahan. Coba lagi nanti.', 'bot');
+                    console.error(error);
                 }
             });
         }
