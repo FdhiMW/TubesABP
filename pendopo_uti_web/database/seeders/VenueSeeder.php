@@ -30,11 +30,6 @@ class VenueSeeder extends Seeder
                     'Genset Cadangan',
                     'Toilet Premium',
                 ],
-                'photos'        => [
-                    'venues/pendopo-1.jpg',
-                    'venues/pendopo-2.jpg',
-                    'venues/pendopo-3.jpg',
-                ],
                 'status'        => 'active',
             ]
         );

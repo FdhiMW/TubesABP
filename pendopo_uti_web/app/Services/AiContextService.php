@@ -19,7 +19,6 @@ class AiContextService
                 'capacity',
                 'price_per_day',
                 'facilities',
-                'photos',
                 'status',
             ])
             ->map(function ($venue) {
@@ -31,7 +30,6 @@ class AiContextService
                     'capacity' => $venue->capacity,
                     'price_per_day' => $venue->price_per_day,
                     'facilities' => $venue->facilities,
-                    'photos' => $venue->photos,
                     'status' => $venue->status,
                 ];
             })
@@ -68,7 +66,6 @@ class AiContextService
             'capacity' => $venue->capacity,
             'price_per_day' => $venue->price_per_day,
             'facilities' => $venue->facilities,
-            'photos' => $venue->photos,
             'status' => $venue->status,
         ];
     }

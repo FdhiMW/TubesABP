@@ -13,11 +13,8 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             VenueSeeder::class,
             PackageSeeder::class,
-            VenueScheduleSeeder::class,
             BookingSeeder::class,
             SurveySeeder::class,
-            WoRequestSeeder::class,
-            NotificationSeeder::class,
         ]);
     }
 }
