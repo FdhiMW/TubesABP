@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import 'home_screen.dart';
 import 'register_screen.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class LoginScreen extends StatefulWidget {
   final bool showLogoutMessage;
@@ -36,6 +37,20 @@ class _LoginScreenState extends State<LoginScreen> {
       if (!mounted) return;
 
       if (result['success'] == true) {
+        final fcmToken = await FirebaseMessaging.instance.getToken();
+
+        debugPrint('TOKEN LOGIN: ${result['token']}');
+        debugPrint('FCM TOKEN: $fcmToken');
+
+        if (fcmToken != null) {
+          await AuthService.saveFcmToken(
+            token: result['token'],
+            fcmToken: fcmToken,
+          );
+
+          debugPrint('SAVE FCM RESPONSE:');
+        }
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(result['message'])),
         );

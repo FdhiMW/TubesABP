@@ -6,6 +6,8 @@ use App\Models\Booking;
 use App\Models\Survey;
 use App\Models\User;
 use App\Models\Venue;
+use App\Models\Notification;
+use App\Services\FirebaseNotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -110,6 +112,34 @@ class AdminController extends Controller
                 'payment_status' => 'unpaid'
             ]);
 
+            $user = $booking->user;
+
+            Notification::create([
+                'user_id' => $user->id,
+                'title' => 'Booking Diterima',
+                'message' => 'Booking Anda telah disetujui. Silakan lakukan pembayaran.',
+                'type' => 'booking',
+                'reference_type' => 'booking',
+                'reference_id' => $booking->id,
+            ]);
+
+            if ($user && $user->fcm_token) {
+                try {
+                    app(\App\Services\FirebaseNotificationService::class)
+                        ->send(
+                            $user->fcm_token,
+                            'Booking Diterima',
+                            'Booking Anda telah disetujui. Silakan lakukan pembayaran.'
+                        );
+
+                } catch (\Exception $e) {
+                    \Log::error('FCM Booking Error', [
+                        'booking_id' => $booking->id,
+                        'error' => $e->getMessage(),
+                    ]);
+                }
+            }
+
             Booking::where('venue_id', $booking->venue_id)
                 ->where('event_date', $booking->event_date)
                 ->where('id', '!=', $booking->id)
@@ -212,6 +242,27 @@ class AdminController extends Controller
             'confirmed_time' => $survey->proposed_time,
             'admin_notes'    => $request->admin_notes,
         ]);
+
+        $user = $survey->user;
+
+        Notification::create([
+            'user_id' => $user->id,
+            'title' => 'Survey Dikonfirmasi',
+            'message' => 'Jadwal survey Anda telah disetujui.',
+            'type' => 'survey',
+            'reference_type' => 'survey',
+            'reference_id' => $survey->id,
+        ]);
+
+        if ($user && $user->fcm_token) {
+
+            app(\App\Services\FirebaseNotificationService::class)
+                ->send(
+                    $user->fcm_token,
+                    'Survey Dikonfirmasi',
+                    'Jadwal survey Anda telah disetujui.'
+                );
+        }
 
         return redirect()->route('admin.surveys.show', $survey->id)
             ->with('success', 'Jadwal survey disetujui.');
