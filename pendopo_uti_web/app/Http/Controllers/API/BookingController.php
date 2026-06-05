@@ -107,8 +107,6 @@ class BookingController extends Controller
 
         $snapToken = Snap::getSnapToken($params);
 
-        $booking->update(['payment_reference' => $snapToken]);
-
         return response()->json([
             'success' => true,
             'data'    => ['token' => $snapToken],

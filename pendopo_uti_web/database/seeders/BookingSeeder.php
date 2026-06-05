@@ -77,7 +77,7 @@ class BookingSeeder extends Seeder
                 'guest_count'       => 500,
                 'total_price'       => 25000000,
                 'status'            => 'confirmed',
-                'payment_reference' => 'MIDTRANS-DUMMY-12345',
+                'payment_status'    => 'paid',
             ],
 
             // 5. Booking CANCELLED — pernah dibatalkan

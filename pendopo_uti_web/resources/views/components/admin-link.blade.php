@@ -4,7 +4,7 @@
     @if(auth()->user()->isAdmin())
         @if($variant === 'hero')
             <li>
-                <a href="{{ route('admin.dashboard') }}">
+                <a href="{{ route('admin.dashboard') }}" class="transition-colors hover:text-gold-soft">
                     🛡️ Admin Panel
                 </a>
             </li>

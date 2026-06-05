@@ -16,13 +16,11 @@ class Venue extends Model
         'capacity',
         'price_per_day',
         'facilities',
-        'photos',
         'status',
     ];
 
     protected $casts = [
         'facilities'    => 'array',
-        'photos'        => 'array',
         'price_per_day' => 'decimal:2',
     ];
 
