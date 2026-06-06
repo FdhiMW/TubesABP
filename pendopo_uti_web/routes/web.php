@@ -70,6 +70,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/manage', [ManageController::class, 'index'])->name('manage.index');
 
     Route::get('/payment/{id}', [PaymentController::class, 'pay']);
+    Route::post('/payment/{id}/confirm', [PaymentController::class, 'confirmFromClient']);
 
     Route::post('/booking/{id}/cancel', [ManageController::class, 'cancelBooking'])->name('booking.cancel');
     Route::post('/survey/{id}/cancel',  [ManageController::class, 'cancelSurvey'])->name('survey.cancel');

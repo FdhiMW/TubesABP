@@ -44,7 +44,7 @@ class HomeScreen extends StatelessWidget {
       context,
       MaterialPageRoute(
         builder: (_) => BookingPage(
-          baseUrl: 'http://192.168.0.101:8000/api', // Logika API asli
+          baseUrl: 'http://10.32.224.27:8000/api', // Logika API asli
           token: token,
           userName: userName,
           userEmail: userEmail,
@@ -69,7 +69,7 @@ class HomeScreen extends StatelessWidget {
       context,
       MaterialPageRoute(
       builder: (_) => ManagePage(
-      baseUrl: 'http://192.168.0.101:8000/api', // PASTIKAN BARIS INI DITAMBAHKAN
+      baseUrl: 'http://10.32.224.27:8000/api', // PASTIKAN BARIS INI DITAMBAHKAN
       token: token,
       userName: userName,
       userEmail: userEmail,

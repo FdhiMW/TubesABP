@@ -26,6 +26,7 @@ class PaymentController extends Controller
         Config::$isSanitized = true;
         Config::$is3ds = true;
 
+
         $orderId = 'BOOK-' . $booking->id . '-' . time();
 
         // ✅ SIMPAN
@@ -49,6 +50,45 @@ class PaymentController extends Controller
         return response()->json([
             'token' => $snapToken
         ]);
+    }
+
+    public function confirmFromClient(Request $request, $id)
+    {
+        $booking = Booking::findOrFail($id);
+
+        if ($booking->user_id !== auth()->id()) {
+            return response()->json(['message' => 'Forbidden'], 403);
+        }
+
+        // Verifikasi ke Midtrans API
+        $serverKey = config('midtrans.serverKey');
+        $orderId   = $booking->midtrans_order_id;
+
+        if (!$orderId) {
+            return response()->json(['message' => 'Order ID tidak ditemukan'], 400);
+        }
+
+        $isProduction = config('midtrans.isProduction', false);
+        $baseUrl      = $isProduction
+            ? 'https://api.midtrans.com'
+            : 'https://api.sandbox.midtrans.com';
+
+        $response = \Illuminate\Support\Facades\Http::withBasicAuth($serverKey, '')
+            ->get("{$baseUrl}/v2/{$orderId}/status");
+
+        if ($response->failed()) {
+            return response()->json(['message' => 'Gagal verifikasi ke Midtrans'], 500);
+        }
+
+        $status = $response->json('transaction_status');
+        $fraud  = $response->json('fraud_status');
+
+        if (($status === 'capture' && $fraud === 'accept') || $status === 'settlement') {
+            $booking->update(['payment_status' => 'paid']);
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false, 'status' => $status]);
     }
 
     public function callback(Request $request)

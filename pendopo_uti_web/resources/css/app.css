@@ -16,13 +16,13 @@
 
     /* Palet "Luxury Editorial" — diambil dari foto venue
        (pilar putih, dedaunan hijau, sentuhan emas hangat) */
-    --color-cream: #faf6ef; /* background terang */
-    --color-ivory: #f1e9da; /* section alternatif */
-    --color-ink: #1c2a22; /* teks utama (forest ink) */
-    --color-forest: #2c5440; /* hijau dalam */
-    --color-forest-deep: #16301f; /* footer / overlay */
-    --color-gold: #b8893f; /* aksen emas */
-    --color-gold-soft: #cda05a; /* aksen emas terang (hover) */
+    --color-cream: #faf8f5; /* background terang */
+    --color-ivory: #f5f1ed; /* section alternatif */
+    --color-ink: #0b3120; /* teks utama (forest ink) */
+    --color-forest: #1a4a32; /* hijau dalam */
+    --color-forest-deep: #0b3120; /* footer / overlay */
+    --color-gold: #d4af37; /* aksen emas */
+    --color-gold-soft: #e5c14e; /* aksen emas terang (hover) */
 
     /* Animasi reveal halus saat halaman dimuat */
     --animate-fade-up: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;

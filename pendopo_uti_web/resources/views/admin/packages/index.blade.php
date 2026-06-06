@@ -19,7 +19,7 @@
 
 {{-- Stats Bar --}}
 <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:15px; margin-bottom:25px;">
-    <div style="background:#fff; padding:20px; border-radius:8px; border-left:4px solid #c9a861;">
+    <div style="background:#fff; padding:20px; border-radius:8px; border-left:4px solid #d4af37;">
         <p style="margin:0; color:#8a8a8a; font-size:13px;">Total Paket</p>
         <p style="margin:0; color:#0b3120; font-size:28px; font-weight:bold;">{{ $packages->total() }}</p>
     </div>

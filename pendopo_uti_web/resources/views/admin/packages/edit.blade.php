@@ -45,14 +45,14 @@
                 Nama Paket *
             </label>
             <input type="text" name="name" value="{{ old('name', $package->name) }}" required maxlength="100"
-                   style="width:100%; padding:12px 14px; border:1px solid #e0d8cc; border-radius:6px; font-size:14px; box-sizing:border-box;">
+                   style="width:100%; padding:12px 14px; border:1px solid #e8e0d8; border-radius:6px; font-size:14px; box-sizing:border-box;">
         </div>
         <div>
             <label style="display:block; margin-bottom:8px; color:#0b3120; font-weight:600; font-size:14px;">
                 Urutan Tampil
             </label>
             <input type="number" name="sort_order" value="{{ old('sort_order', $package->sort_order) }}" min="0"
-                   style="width:100%; padding:12px 14px; border:1px solid #e0d8cc; border-radius:6px; font-size:14px; box-sizing:border-box;">
+                   style="width:100%; padding:12px 14px; border:1px solid #e8e0d8; border-radius:6px; font-size:14px; box-sizing:border-box;">
         </div>
     </div>
 
@@ -62,14 +62,14 @@
                 Harga (Rupiah) *
             </label>
             <input type="number" name="price" value="{{ old('price', $package->price) }}" min="0" required step="1000"
-                   style="width:100%; padding:12px 14px; border:1px solid #e0d8cc; border-radius:6px; font-size:14px; box-sizing:border-box;">
+                   style="width:100%; padding:12px 14px; border:1px solid #e8e0d8; border-radius:6px; font-size:14px; box-sizing:border-box;">
         </div>
         <div>
             <label style="display:block; margin-bottom:8px; color:#0b3120; font-weight:600; font-size:14px;">
                 Label Harga *
             </label>
             <input type="text" name="price_label" value="{{ old('price_label', $package->price_label) }}" required maxlength="50"
-                   style="width:100%; padding:12px 14px; border:1px solid #e0d8cc; border-radius:6px; font-size:14px; box-sizing:border-box;">
+                   style="width:100%; padding:12px 14px; border:1px solid #e8e0d8; border-radius:6px; font-size:14px; box-sizing:border-box;">
         </div>
     </div>
 
@@ -78,7 +78,7 @@
             Tagline
         </label>
         <input type="text" name="tagline" value="{{ old('tagline', $package->tagline) }}" maxlength="255"
-               style="width:100%; padding:12px 14px; border:1px solid #e0d8cc; border-radius:6px; font-size:14px; box-sizing:border-box;">
+               style="width:100%; padding:12px 14px; border:1px solid #e8e0d8; border-radius:6px; font-size:14px; box-sizing:border-box;">
     </div>
 
     <div style="margin-bottom:18px;">
@@ -86,7 +86,7 @@
             Fitur Paket (satu per baris) *
         </label>
         <textarea name="features" rows="6" required
-                  style="width:100%; padding:12px 14px; border:1px solid #e0d8cc; border-radius:6px; font-size:14px; box-sizing:border-box; font-family:inherit; resize:vertical;">{{ old('features', implode("\n", $package->features ?? [])) }}</textarea>
+                  style="width:100%; padding:12px 14px; border:1px solid #e8e0d8; border-radius:6px; font-size:14px; box-sizing:border-box; font-family:inherit; resize:vertical;">{{ old('features', implode("\n", $package->features ?? [])) }}</textarea>
     </div>
 
     <div style="margin-bottom:18px;">
@@ -95,9 +95,9 @@
         </label>
         <div style="display:flex; gap:10px; align-items:center;">
             <input type="color" name="color" value="{{ old('color', $package->color) }}"
-                   style="width:60px; height:42px; border:1px solid #e0d8cc; border-radius:6px; cursor:pointer;">
+                   style="width:60px; height:42px; border:1px solid #e8e0d8; border-radius:6px; cursor:pointer;">
             <input type="text" value="{{ old('color', $package->color) }}" readonly
-                   style="flex:1; padding:12px 14px; border:1px solid #e0d8cc; border-radius:6px; font-size:14px;"
+                   style="flex:1; padding:12px 14px; border:1px solid #e8e0d8; border-radius:6px; font-size:14px;"
                    id="colorPreview">
         </div>
     </div>

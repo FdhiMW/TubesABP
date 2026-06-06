@@ -187,13 +187,13 @@ class AdminController extends Controller
     {
         $booking = Booking::findOrFail($id);
 
-        if ($booking->status !== 'paid') {
+        if ($booking->payment_status !== 'paid') {
             return back()->withErrors([
                 'status' => 'Hanya booking yang sudah "paid" yang bisa dikonfirmasi.',
             ]);
         }
 
-        $booking->update(['status' => 'confirmed']);
+        $booking->update(['status' => 'completed']);
 
         return back()->with('success', 'Booking dikonfirmasi.');
     }
@@ -255,13 +255,19 @@ class AdminController extends Controller
         ]);
 
         if ($user && $user->fcm_token) {
-
-            app(\App\Services\FirebaseNotificationService::class)
-                ->send(
-                    $user->fcm_token,
-                    'Survey Dikonfirmasi',
-                    'Jadwal survey Anda telah disetujui.'
-                );
+            try {
+                app(\App\Services\FirebaseNotificationService::class)
+                    ->send(
+                        $user->fcm_token,
+                        'Survey Dikonfirmasi',
+                        'Jadwal survey Anda telah disetujui.'
+                    );
+            } catch (\Exception $e) {
+                \Log::error('FCM Survey Error', [
+                    'survey_id' => $survey->id,
+                    'error'     => $e->getMessage(),
+                ]);
+            }
         }
 
         return redirect()->route('admin.surveys.show', $survey->id)

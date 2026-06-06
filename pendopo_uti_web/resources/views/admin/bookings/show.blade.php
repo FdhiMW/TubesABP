@@ -84,7 +84,7 @@
                     </form>
                 </div>
 
-            @elseif($booking->status === 'awaiting_payment')
+            @elseif($booking->status === 'confirmed' && $booking->payment_status !== 'paid')
                 <div style="background:#dbeafe; padding:25px; border-radius:10px; color:#1e40af;">
                     <h3 style="margin:0 0 10px;">💳 Menunggu Pembayaran</h3>
                     <p style="margin:0 0 15px; font-size:13px;">

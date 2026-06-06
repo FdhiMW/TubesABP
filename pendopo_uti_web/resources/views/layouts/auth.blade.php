@@ -11,18 +11,19 @@
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --gold: #B8860B;
-            --gold-light: #D4A843;
-            --gold-pale: #F5E6C8;
-            --cream: #FDF8F0;
-            --cream-dark: #F0E6D3;
-            --charcoal: #2C2418;
-            --brown: #5C4A32;
-            --brown-light: #8B7355;
-            --rose: #C9A9A6;
+            /* Palet diselaraskan dengan Dashboard Admin */
+            --gold: #d4af37;
+            --gold-light: #e5c14e;
+            --gold-pale: #f5f1ed;
+            --cream: #faf8f5;
+            --cream-dark: #e8e0d8;
+            --charcoal: #0b3120;
+            --brown: #1a4a32;
+            --brown-light: #8a8a8a;
+            --rose: #b7a98c;
             --white: #FFFFFF;
             --error: #B44040;
-            --success: #4A7A5B;
+            --success: #1a4a32;
             --font-display: 'Cormorant Garamond', Georgia, serif;
             --font-body: 'Jost', sans-serif;
         }
@@ -44,12 +45,12 @@
         }
         .visual-panel::before {
             content: ''; position: absolute; inset: 0;
-            background: linear-gradient(135deg, rgba(44,36,24,0.85) 0%, rgba(92,74,50,0.6) 50%, rgba(184,134,11,0.3) 100%);
+            background: linear-gradient(135deg, rgba(11,49,32,0.85) 0%, rgba(26,74,50,0.6) 50%, rgba(212,175,55,0.3) 100%);
             z-index: 1;
         }
         .visual-bg {
             position: absolute; inset: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><defs><pattern id="p" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M20 0L40 20L20 40L0 20Z" fill="none" stroke="%23B8860B" stroke-width="0.5" opacity="0.15"/></pattern></defs><rect width="400" height="400" fill="%232C2418"/><rect width="400" height="400" fill="url(%23p)"/></svg>');
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><defs><pattern id="p" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M20 0L40 20L20 40L0 20Z" fill="none" stroke="%23d4af37" stroke-width="0.5" opacity="0.15"/></pattern></defs><rect width="400" height="400" fill="%230b3120"/><rect width="400" height="400" fill="url(%23p)"/></svg>');
             background-size: 200px;
         }
         .visual-content {
@@ -116,7 +117,7 @@
             outline: none; transition: all 0.3s ease;
         }
         .input-wrapper input::placeholder { color: var(--brown-light); font-weight: 300; }
-        .input-wrapper input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(184,134,11,0.1); }
+        .input-wrapper input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212,175,55,0.15); }
         .input-wrapper:has(input:focus) .icon { color: var(--gold); }
 
         .input-wrapper input.is-invalid { border-color: var(--error); }
@@ -164,7 +165,7 @@
         }
         .btn-primary:hover::before { left: 0; }
         .btn-primary span { position: relative; z-index: 1; }
-        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(44,36,24,0.25); }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(11,49,32,0.25); }
 
         /* Alert */
         .alert {

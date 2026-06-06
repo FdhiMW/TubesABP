@@ -8,7 +8,7 @@
     {{-- HEADER --}}
     <div style="display:flex; align-items:center; gap:15px; margin-bottom:30px;">
         <a href="{{ url('/') }}" style="color:#666; font-size:20px; text-decoration:none; cursor:pointer;">←</a>
-        <h1 style="margin:0; font-size:24px; font-weight:500; color:#333;">Riwayat</h1>
+        <h1 style="margin:0; font-size:24px; font-weight:500; color:#0b3120;">Riwayat</h1>
     </div>
 
     {{-- SUCCESS MESSAGE --}}
@@ -60,7 +60,7 @@
 
                 {{-- CONTENT --}}
                 <div style="flex:1;">
-                    <h3 style="margin:0 0 5px 0; font-size:16px; color:#333; font-weight:500;">{{ $b->venue->name ?? 'Venue' }}</h3>
+                    <h3 style="margin:0 0 5px 0; font-size:16px; color:#0b3120; font-weight:500;">{{ $b->venue->name ?? 'Venue' }}</h3>
                     <p style="margin:0 0 10px 0; font-size:13px; color:#999;">{{ $b->venue->location ?? 'Location' }}</p>
                     <p style="margin:0; font-size:13px; color:#666; display:flex; align-items:center; gap:8px;">
                         📅 {{ \Carbon\Carbon::parse($b->event_date)->format('l, j M Y') }} • 
@@ -121,10 +121,10 @@
                     @endif
 
                     {{-- TOMBOL BAYAR --}}
-                    @if($b->status == 'confirmed' && $b->payment_status == 'unpaid')
+                    @if($b->status == 'confirmed' && in_array($b->payment_status, ['unpaid', 'pending']))
                         <button onclick="payNow({{ $b->id }})"
                             style="background:#1976d2; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:12px;">
-                            💳 Bayar
+                            💳 {{ $b->payment_status == 'pending' ? 'Lanjutkan Bayar' : 'Bayar' }}
                         </button>
                     @endif
 
@@ -149,7 +149,7 @@
 
                 {{-- CONTENT --}}
                 <div style="flex:1;">
-                    <h3 style="margin:0 0 5px 0; font-size:16px; color:#333; font-weight:500;">{{ $s->venue->name ?? 'Venue' }}</h3>
+                    <h3 style="margin:0 0 5px 0; font-size:16px; color:#0b3120; font-weight:500;">{{ $s->venue->name ?? 'Venue' }}</h3>
                     <p style="margin:0 0 10px 0; font-size:13px; color:#999;">{{ $s->venue->location ?? 'Location' }}</p>
                     <p style="margin:0; font-size:13px; color:#666; display:flex; align-items:center; gap:8px;">
                         📅 {{ \Carbon\Carbon::parse($s->proposed_date)->format('l, j M Y') }} • 
@@ -231,13 +231,13 @@
             <div style="font-size:24px; margin-bottom:20px; letter-spacing:4px;">✧ ✧ ✧</div>
 
             {{-- TITLE & SUBTITLE --}}
-            <h3 style="margin:0 0 5px 0; font-size:24px; color:#333; font-weight:600;">Reschedule</h3>
+            <h3 style="margin:0 0 5px 0; font-size:24px; color:#0b3120; font-weight:600;">Reschedule</h3>
             <p style="margin:0 0 20px 0; font-size:11px; color:#999; letter-spacing:1px; font-weight:600;">PILIH TANGGAL & WAKTU BARU</p>
 
             {{-- DIVIDER LINE --}}
             <div style="display:flex; align-items:center; margin-bottom:30px;">
                 <div style="flex:1; height:1px; background:#e0e0e0;"></div>
-                <div style="width:8px; height:8px; background:#c9a861; border-radius:50%; margin:0 10px;"></div>
+                <div style="width:8px; height:8px; background:#d4af37; border-radius:50%; margin:0 10px;"></div>
                 <div style="flex:1; height:1px; background:#e0e0e0;"></div>
             </div>
 
@@ -249,7 +249,7 @@
                     <label style="display:block; font-size:11px; color:#999; margin-bottom:10px; font-weight:700; letter-spacing:0.5px;">TANGGAL</label>
                     <div style="position:relative;">
                         <input type="date" id="reschedule_date" required
-                            style="width:100%; padding:12px 14px 12px 14px; border:1px solid #e0e0e0; border-radius:8px; font-size:14px; box-sizing:border-box; background:#f9f9f9; color:#333; transition:border 0.3s;">
+                            style="width:100%; padding:12px 14px 12px 14px; border:1px solid #e0e0e0; border-radius:8px; font-size:14px; box-sizing:border-box; background:#f9f9f9; color:#0b3120; transition:border 0.3s;">
                         <span style="position:absolute; right:12px; top:50%; transform:translateY(-50%); font-size:18px; pointer-events:none;">📅</span>
                     </div>
                 </div>
@@ -259,7 +259,7 @@
                     <label style="display:block; font-size:11px; color:#999; margin-bottom:10px; font-weight:700; letter-spacing:0.5px;">WAKTU</label>
                     <div style="position:relative;">
                         <input type="time" id="reschedule_time" required
-                            style="width:100%; padding:12px 14px 12px 14px; border:1px solid #e0e0e0; border-radius:8px; font-size:14px; box-sizing:border-box; background:#f9f9f9; color:#333; transition:border 0.3s;">
+                            style="width:100%; padding:12px 14px 12px 14px; border:1px solid #e0e0e0; border-radius:8px; font-size:14px; box-sizing:border-box; background:#f9f9f9; color:#0b3120; transition:border 0.3s;">
                         <span style="position:absolute; right:12px; top:50%; transform:translateY(-50%); font-size:18px; pointer-events:none;">🕐</span>
                     </div>
                 </div>
@@ -269,7 +269,7 @@
                     <label style="display:block; font-size:11px; color:#999; margin-bottom:10px; font-weight:700; letter-spacing:0.5px;">WAKTU SELESAI</label>
                     <div style="position:relative;">
                         <input type="time" id="reschedule_end_time"
-                            style="width:100%; padding:12px 14px 12px 14px; border:1px solid #e0e0e0; border-radius:8px; font-size:14px; box-sizing:border-box; background:#f9f9f9; color:#333; transition:border 0.3s;">
+                            style="width:100%; padding:12px 14px 12px 14px; border:1px solid #e0e0e0; border-radius:8px; font-size:14px; box-sizing:border-box; background:#f9f9f9; color:#0b3120; transition:border 0.3s;">
                         <span style="position:absolute; right:12px; top:50%; transform:translateY(-50%); font-size:18px; pointer-events:none;">🕐</span>
                     </div>
                 </div>
@@ -281,7 +281,7 @@
                         Batal
                     </button>
                     <button type="submit" 
-                        style="flex:1; padding:12px; border:none; background:#c9a861; color:#fff; border-radius:8px; cursor:pointer; font-weight:600; font-size:14px; transition:all 0.3s; box-shadow:0 2px 8px rgba(201, 168, 97, 0.3);">
+                        style="flex:1; padding:12px; border:none; background:#d4af37; color:#fff; border-radius:8px; cursor:pointer; font-weight:600; font-size:14px; transition:all 0.3s; box-shadow:0 2px 8px rgba(212, 175, 55, 0.3);">
                         Simpan
                     </button>
                 </div>
@@ -294,12 +294,12 @@
 
 <style>
 .tab-btn.active {
-    color: #333 !important;
-    border-bottom-color: #333 !important;
+    color: #0b3120 !important;
+    border-bottom-color: #0b3120 !important;
 }
 
 .tab-btn:hover {
-    color: #555 !important;
+    color: #1a4a32 !important;
 }
 </style>
 
@@ -321,8 +321,8 @@ function switchTab(tabName) {
         btn.classList.remove('active');
         if (btn.getAttribute('data-tab') === tabName) {
             btn.classList.add('active');
-            btn.style.color = '#333';
-            btn.style.borderBottomColor = '#333';
+            btn.style.color = '#0b3120';
+            btn.style.borderBottomColor = '#0b3120';
         } else {
             btn.style.color = '#999';
             btn.style.borderBottomColor = 'transparent';
@@ -331,24 +331,49 @@ function switchTab(tabName) {
 }
 
 function payNow(id) {
-    fetch('/payment/' + id)
-        .then(response => response.json())
+    fetch('/payment/' + id, {
+        credentials: 'same-origin',
+        headers: { 'Accept': 'application/json' }
+    })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => {
+                    throw new Error(err.message || 'Gagal memuat pembayaran (HTTP ' + response.status + ')');
+                });
+            }
+            return response.json();
+        })
         .then(data => {
+            if (!data.token) {
+                throw new Error('Token pembayaran tidak ditemukan.');
+            }
             window.snap.pay(data.token, {
                 onSuccess: function(result) {
-                    alert("Pembayaran berhasil!");
-                    location.reload();
+                    fetch('/payment/' + id + '/confirm', {
+                        method: 'POST',
+                        credentials: 'same-origin',
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        }
+                    }).finally(function() {
+                        location.reload();
+                    });
                 },
                 onPending: function(result) {
                     alert("Menunggu pembayaran");
+                    location.reload();
                 },
                 onError: function(result) {
-                    alert("Pembayaran gagal");
+                    alert("Pembayaran gagal. Silakan coba lagi.");
                 },
                 onClose: function() {
-                    alert("Kamu menutup popup tanpa bayar");
+                    // user tutup popup tanpa bayar
                 }
             });
+        })
+        .catch(err => {
+            alert("Error: " + err.message);
         });
 }
 

@@ -20,12 +20,12 @@
                 <div id="progressContainer" style="margin-bottom:48px;">
                     <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px; margin-bottom:16px;">
                         <div style="text-align:center; flex:1;">
-                            <div style="width:56px; height:56px; margin:0 auto 12px; background:#c9a861; color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:18px;">1</div>
+                            <div style="width:56px; height:56px; margin:0 auto 12px; background:#d4af37; color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:18px;">1</div>
                             <p style="font-size:13px; color:#0b3120; margin:0; font-weight:600;">Data Diri</p>
                         </div>
-                        <div style="flex:1; height:2px; background:#d9d9d9; margin-top:28px;"></div>
+                        <div style="flex:1; height:2px; background:#e8e0d8; margin-top:28px;"></div>
                         <div style="text-align:center; flex:1;">
-                            <div style="width:56px; height:56px; margin:0 auto 12px; background:#d9d9d9; color:#999; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:18px;">2</div>
+                            <div style="width:56px; height:56px; margin:0 auto 12px; background:#e8e0d8; color:#999; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:18px;">2</div>
                             <p style="font-size:13px; color:#999; margin:0; font-weight:500;">Detail<br>Survey</p>
                         </div>
                     </div>
@@ -48,7 +48,7 @@
                     <!-- Step 1: Isi Data Diri -->
                     <div id="step1" class="form-step">
                         <h2 style="text-align:center; margin:0 0 24px 0; font-size:28px; color:#0b3120;">Isi Data Diri</h2>
-                        <p style="text-align:center; color:#6a6a6a; margin:0 0 24px 0; font-size:14px;">Masukkan informasi lengkap Anda untuk memulai booking pernikahan.</p>
+                        <p style="text-align:center; color:#8a8a8a; margin:0 0 24px 0; font-size:14px;">Masukkan informasi lengkap Anda untuk memulai booking pernikahan.</p>
 
                         <div style="margin-bottom:16px;">
                             <label style="display:block; margin-bottom:8px; color:#0b3120; font-weight:600;">Nama Pengantin</label>
@@ -69,7 +69,7 @@
                     <!-- Step 2: Isi Detail Acara -->
                     <div id="step2" class="form-step" style="display:none;">
                         <h2 style="text-align:center; margin:0 0 24px 0; font-size:28px; color:#0b3120;">Isi Detail Acara</h2>
-                        <p style="text-align:center; color:#6a6a6a; margin:0 0 24px 0; font-size:14px;">Atur detail acara pernikahan Anda di bawah ini.</p>
+                        <p style="text-align:center; color:#8a8a8a; margin:0 0 24px 0; font-size:14px;">Atur detail acara pernikahan Anda di bawah ini.</p>
 
                         <div style="margin-bottom:16px;">
                             <label style="display:block; margin-bottom:8px; color:#0b3120; font-weight:600;">Tanggal Survey</label>
@@ -89,8 +89,8 @@
 
                     <!-- Navigation Buttons -->
                     <div style="display:flex; gap:12px; margin-top:32px;">
-                        <button type="button" onclick="handleBackButton()" style="flex:1; padding:12px 16px; border:1px solid #c9a861; background:#fff; color:#c9a861; border-radius:8px; font-weight:700; cursor:pointer; font-size:14px;">← Kembali</button>
-                        <button type="button" onclick="nextStep()" id="nextBtn" style="flex:1; padding:12px 16px; background:#c9a861; color:#fff; border:none; border-radius:8px; font-weight:700; cursor:pointer; font-size:14px;">Lanjut →</button>
+                        <button type="button" onclick="handleBackButton()" style="flex:1; padding:12px 16px; border:1px solid #d4af37; background:#fff; color:#d4af37; border-radius:8px; font-weight:700; cursor:pointer; font-size:14px;">← Kembali</button>
+                        <button type="button" onclick="nextStep()" id="nextBtn" style="flex:1; padding:12px 16px; background:#d4af37; color:#fff; border:none; border-radius:8px; font-weight:700; cursor:pointer; font-size:14px;">Lanjut →</button>
                     </div>
 
                     <p style="text-align:center; font-size:12px; color:#999; margin-top:8px;">
@@ -130,10 +130,10 @@ document.addEventListener("DOMContentLoaded", function () {
             <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px; margin-bottom:16px;">
                 ${[1, 2].map(i => `
                     <div style="text-align:center; flex:1;">
-                        <div style="width:56px; height:56px; margin:0 auto 12px; background:${i === step ? '#c9a861' : '#d9d9d9'}; color:${i === step ? '#fff' : '#999'}; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:18px;">${i}</div>
+                        <div style="width:56px; height:56px; margin:0 auto 12px; background:${i === step ? '#d4af37' : '#e8e0d8'}; color:${i === step ? '#fff' : '#999'}; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:18px;">${i}</div>
                         <p style="font-size:13px; color:${i === step ? '#0b3120' : '#999'}; margin:0; font-weight:${i === step ? '600' : '500'};">${stepLabels[i-1]}</p>
                     </div>
-                    ${i < 2 ? `<div style="flex:1; height:2px; background:#d9d9d9; margin-top:28px;"></div>` : ''}
+                    ${i < 2 ? `<div style="flex:1; height:2px; background:#e8e0d8; margin-top:28px;"></div>` : ''}
                 `).join('')}
             </div>
         `;

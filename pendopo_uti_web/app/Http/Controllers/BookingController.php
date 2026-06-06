@@ -27,16 +27,20 @@ class BookingController extends Controller
 
     public function store(Request $request)
     {
+        $venue    = Venue::find($request->venue_id);
+        $maxGuest = $venue?->capacity ?? 1;
+
         $request->validate([
             'event_date'  => 'required|date|after_or_equal:today',
             'event_time'  => 'required|date_format:H:i|after_or_equal:07:00|before_or_equal:22:00',
             'end_time'    => 'required|date_format:H:i|before_or_equal:22:00',
-            'guest_count' => 'required|integer|min:1',
+            'guest_count' => "required|integer|min:1|max:{$maxGuest}",
             'venue_id'    => 'required|exists:venues,id',
             'package_id'  => 'required|exists:packages,id',
         ], [
             'package_id.required' => 'Mohon pilih paket terlebih dahulu.',
             'package_id.exists'   => 'Paket yang dipilih tidak valid.',
+            'guest_count.max'     => "Jumlah tamu melebihi kapasitas venue (maksimal {$maxGuest} orang).",
         ]);
 
         // Pastikan paket masih aktif
@@ -54,7 +58,6 @@ class BookingController extends Controller
             ])->withInput();
         }
 
-        $venue = Venue::findOrFail($request->venue_id);
         $activeBookingStatus = ['pending', 'awaiting_payment', 'paid', 'confirmed'];
         $activeSurveyStatus  = ['pending', 'confirmed'];
 

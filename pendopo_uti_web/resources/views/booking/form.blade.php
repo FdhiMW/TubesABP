@@ -37,19 +37,19 @@
                     <div style="margin-bottom:18px;">
                         <label style="display:block; margin-bottom:8px; color:#0b3120; font-weight:600; font-size:14px;">Nama Lengkap</label>
                         <input type="text" value="{{ $user->name }}" readonly
-                               style="width:100%; padding:13px 16px; border:1px solid #e0d8cc; border-radius:8px; font-size:14px; box-sizing:border-box; background:#faf8f5; font-family:Georgia, serif;">
+                               style="width:100%; padding:13px 16px; border:1px solid #e8e0d8; border-radius:8px; font-size:14px; box-sizing:border-box; background:#faf8f5; font-family:Georgia, serif;">
                     </div>
 
                     <div style="margin-bottom:18px;">
                         <label style="display:block; margin-bottom:8px; color:#0b3120; font-weight:600; font-size:14px;">Email</label>
                         <input type="email" value="{{ $user->email }}" readonly
-                               style="width:100%; padding:13px 16px; border:1px solid #e0d8cc; border-radius:8px; font-size:14px; box-sizing:border-box; background:#faf8f5; font-family:Georgia, serif;">
+                               style="width:100%; padding:13px 16px; border:1px solid #e8e0d8; border-radius:8px; font-size:14px; box-sizing:border-box; background:#faf8f5; font-family:Georgia, serif;">
                     </div>
 
                     <div style="margin-bottom:18px;">
                         <label style="display:block; margin-bottom:8px; color:#0b3120; font-weight:600; font-size:14px;">Nomor HP</label>
                         <input type="text" value="{{ $user->phone ?? '-' }}" readonly
-                               style="width:100%; padding:13px 16px; border:1px solid #e0d8cc; border-radius:8px; font-size:14px; box-sizing:border-box; background:#faf8f5; font-family:Georgia, serif;">
+                               style="width:100%; padding:13px 16px; border:1px solid #e8e0d8; border-radius:8px; font-size:14px; box-sizing:border-box; background:#faf8f5; font-family:Georgia, serif;">
                     </div>
 
                     <p style="font-size:12px; color:#8a8a8a; text-align:center; margin-top:8px;">
@@ -66,7 +66,7 @@
                         <label style="display:block; margin-bottom:8px; color:#0b3120; font-weight:600; font-size:14px;">Tanggal Pernikahan</label>
                         <input type="date" name="event_date" min="{{ date('Y-m-d') }}"
                                value="{{ old('event_date') }}" required
-                               style="width:100%; padding:13px 16px; border:1px solid #e0d8cc; border-radius:8px; font-size:14px; box-sizing:border-box; font-family:Georgia, serif;">
+                               style="width:100%; padding:13px 16px; border:1px solid #e8e0d8; border-radius:8px; font-size:14px; box-sizing:border-box; font-family:Georgia, serif;">
                     </div>
 
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:18px;">
@@ -74,21 +74,27 @@
                             <label style="display:block; margin-bottom:8px; color:#0b3120; font-weight:600; font-size:14px;">Waktu Mulai</label>
                             <input type="time" name="event_time" min="07:00" max="22:00"
                                    value="{{ old('event_time', '10:00') }}" required
-                                   style="width:100%; padding:13px 16px; border:1px solid #e0d8cc; border-radius:8px; font-size:14px; box-sizing:border-box; font-family:Georgia, serif;">
+                                   style="width:100%; padding:13px 16px; border:1px solid #e8e0d8; border-radius:8px; font-size:14px; box-sizing:border-box; font-family:Georgia, serif;">
                         </div>
                         <div>
                             <label style="display:block; margin-bottom:8px; color:#0b3120; font-weight:600; font-size:14px;">Waktu Selesai</label>
                             <input type="time" name="end_time" min="07:00" max="22:00"
                                    value="{{ old('end_time', '17:00') }}" required
-                                   style="width:100%; padding:13px 16px; border:1px solid #e0d8cc; border-radius:8px; font-size:14px; box-sizing:border-box; font-family:Georgia, serif;">
+                                   style="width:100%; padding:13px 16px; border:1px solid #e8e0d8; border-radius:8px; font-size:14px; box-sizing:border-box; font-family:Georgia, serif;">
                         </div>
                     </div>
 
                     <div style="margin-bottom:18px;">
-                        <label style="display:block; margin-bottom:8px; color:#0b3120; font-weight:600; font-size:14px;">Jumlah Tamu</label>
-                        <input type="number" name="guest_count" min="1" max="500"
-                               value="{{ old('guest_count') }}" placeholder="300" required
-                               style="width:100%; padding:13px 16px; border:1px solid #e0d8cc; border-radius:8px; font-size:14px; box-sizing:border-box; font-family:Georgia, serif;">
+                        <label style="display:block; margin-bottom:8px; color:#0b3120; font-weight:600; font-size:14px;">
+                            Jumlah Tamu
+                            <span style="font-weight:normal; color:#8a8a8a;">(maks. {{ number_format($venue->capacity ?? 500) }} orang)</span>
+                        </label>
+                        <input type="number" name="guest_count" min="1" max="{{ $venue->capacity ?? 500 }}"
+                               value="{{ old('guest_count') }}" placeholder="Contoh: 200" required
+                               style="width:100%; padding:13px 16px; border:1px solid #e8e0d8; border-radius:8px; font-size:14px; box-sizing:border-box; font-family:Georgia, serif;">
+                        <p style="margin:6px 0 0; font-size:12px; color:#8a8a8a;">
+                            🏛️ Kapasitas venue: <strong style="color:#0b3120;">{{ number_format($venue->capacity ?? 500) }} orang</strong>
+                        </p>
                     </div>
 
                     <p style="font-size:12px; color:#8a8a8a; background:#fff7e6; padding:10px 14px; border-radius:6px; margin-top:16px;">
@@ -109,7 +115,7 @@
                                     style="display:none;">
 
                                 @if($pkg->is_popular)
-                                    <div style="position:absolute; top:-10px; left:50%; transform:translateX(-50%); background:#c9a861; color:white; padding:3px 12px; border-radius:10px; font-size:11px; font-weight:bold; z-index:2;">
+                                    <div style="position:absolute; top:-10px; left:50%; transform:translateX(-50%); background:#d4af37; color:white; padding:3px 12px; border-radius:10px; font-size:11px; font-weight:bold; z-index:2;">
                                         Popular
                                     </div>
                                 @endif
@@ -147,7 +153,7 @@
                     <h2 style="text-align:center; margin:0 0 12px; font-size:32px; color:#0b3120; font-weight:normal;">Konfirmasi Booking</h2>
                     <p style="text-align:center; color:#8a8a8a; margin:0 0 30px; font-size:14px;">Tinjau kembali detail pesanan Anda sebelum konfirmasi.</p>
 
-                    <div style="background:#f9f7f5; padding:24px; border-radius:12px; margin-bottom:18px; border-left:4px solid #c9a861;">
+                    <div style="background:#f9f7f5; padding:24px; border-radius:12px; margin-bottom:18px; border-left:4px solid #d4af37;">
                         <h4 style="margin:0 0 16px; color:#0b3120; font-size:14px; text-transform:uppercase; letter-spacing:1px;">Ringkasan Pesanan</h4>
 
                         <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #e8e0d8; font-size:14px;">
@@ -172,10 +178,10 @@
                         </div>
                     </div>
 
-                    <div style="background:#fff9f2; padding:24px; border-radius:12px; margin-bottom:24px; border-left:4px solid #c9a861;">
+                    <div style="background:#fff9f2; padding:24px; border-radius:12px; margin-bottom:24px; border-left:4px solid #d4af37;">
                         <div style="display:flex; justify-content:space-between; align-items:center; font-size:18px; font-weight:bold; color:#0b3120;">
                             <span>TOTAL</span>
-                            <span style="color:#c9a861; font-size:24px;" id="summary-total">-</span>
+                            <span style="color:#d4af37; font-size:24px;" id="summary-total">-</span>
                         </div>
                     </div>
 
@@ -191,11 +197,11 @@
                 {{-- Tombol Navigasi --}}
                 <div style="display:flex; gap:12px; margin-top:32px;">
                     <button type="button" onclick="handleBackButton()"
-                            style="flex:1; padding:14px; border:1.5px solid #c9a861; background:#fff; color:#c9a861; border-radius:8px; font-weight:bold; cursor:pointer; font-size:14px; font-family:Georgia, serif;">
+                            style="flex:1; padding:14px; border:1.5px solid #d4af37; background:#fff; color:#d4af37; border-radius:8px; font-weight:bold; cursor:pointer; font-size:14px; font-family:Georgia, serif;">
                         ← Kembali
                     </button>
                     <button type="button" onclick="nextStep()" id="nextBtn"
-                            style="flex:2; padding:14px; background:#c9a861; color:#fff; border:none; border-radius:8px; font-weight:bold; cursor:pointer; font-size:14px; font-family:Georgia, serif;">
+                            style="flex:2; padding:14px; background:#d4af37; color:#fff; border:none; border-radius:8px; font-weight:bold; cursor:pointer; font-size:14px; font-family:Georgia, serif;">
                         Lanjut →
                     </button>
                 </div>
@@ -210,12 +216,12 @@
 
 <style>
     .pkg-label input[type="radio"]:checked ~ .pkg-card {
-        border-color: #c9a861 !important;
+        border-color: #d4af37 !important;
         background: #fffbf2 !important;
         box-shadow: 0 4px 16px rgba(201,168,97,0.2);
     }
     .pkg-label input[type="radio"]:checked ~ .pkg-card .pkg-btn {
-        background: #c9a861;
+        background: #d4af37;
         color: #fff;
     }
     .pkg-label input[type="radio"]:checked ~ .pkg-card .pkg-btn-text { display:none; }
@@ -234,9 +240,9 @@
         for (let i = 1; i <= 4; i++) {
             const isDone   = i < step;
             const isActive = i === step;
-            const bg       = (isDone || isActive) ? '#c9a861' : '#e0d8cc';
+            const bg       = (isDone || isActive) ? '#d4af37' : '#e8e0d8';
             const txtColor = (isDone || isActive) ? '#fff' : '#999';
-            const labelColor = isActive ? '#0b3120' : (isDone ? '#c9a861' : '#999');
+            const labelColor = isActive ? '#0b3120' : (isDone ? '#d4af37' : '#999');
             const content  = isDone ? '✓' : i;
 
             html += `
@@ -250,7 +256,7 @@
                 </div>
             `;
             if (i < 4) {
-                const lineColor = i < step ? '#c9a861' : '#e0d8cc';
+                const lineColor = i < step ? '#d4af37' : '#e8e0d8';
                 html += `<div style="flex:0.6; height:2px; background:${lineColor}; margin-top:24px;"></div>`;
             }
         }

@@ -33,14 +33,14 @@
             </label>
             <input type="text" name="name" value="{{ old('name') }}" required maxlength="100"
                    placeholder="Contoh: Diamond Package"
-                   style="width:100%; padding:12px 14px; border:1px solid #e0d8cc; border-radius:6px; font-size:14px; box-sizing:border-box;">
+                   style="width:100%; padding:12px 14px; border:1px solid #e8e0d8; border-radius:6px; font-size:14px; box-sizing:border-box;">
         </div>
         <div>
             <label style="display:block; margin-bottom:8px; color:#0b3120; font-weight:600; font-size:14px;">
                 Urutan Tampil
             </label>
             <input type="number" name="sort_order" value="{{ old('sort_order', 0) }}" min="0"
-                   style="width:100%; padding:12px 14px; border:1px solid #e0d8cc; border-radius:6px; font-size:14px; box-sizing:border-box;">
+                   style="width:100%; padding:12px 14px; border:1px solid #e8e0d8; border-radius:6px; font-size:14px; box-sizing:border-box;">
         </div>
     </div>
 
@@ -51,7 +51,7 @@
             </label>
             <input type="number" name="price" value="{{ old('price') }}" min="0" required step="1000"
                    placeholder="25000000"
-                   style="width:100%; padding:12px 14px; border:1px solid #e0d8cc; border-radius:6px; font-size:14px; box-sizing:border-box;">
+                   style="width:100%; padding:12px 14px; border:1px solid #e8e0d8; border-radius:6px; font-size:14px; box-sizing:border-box;">
             <p style="margin:5px 0 0; font-size:11px; color:#8a8a8a;">Tanpa titik. Contoh: 25000000</p>
         </div>
         <div>
@@ -60,7 +60,7 @@
             </label>
             <input type="text" name="price_label" value="{{ old('price_label') }}" required maxlength="50"
                    placeholder="Rp 25jt"
-                   style="width:100%; padding:12px 14px; border:1px solid #e0d8cc; border-radius:6px; font-size:14px; box-sizing:border-box;">
+                   style="width:100%; padding:12px 14px; border:1px solid #e8e0d8; border-radius:6px; font-size:14px; box-sizing:border-box;">
             <p style="margin:5px 0 0; font-size:11px; color:#8a8a8a;">Tampil di kartu paket, contoh: "Rp 25jt"</p>
         </div>
     </div>
@@ -71,7 +71,7 @@
         </label>
         <input type="text" name="tagline" value="{{ old('tagline') }}" maxlength="255"
                placeholder="Untuk acara sederhana dengan kebutuhan dasar"
-               style="width:100%; padding:12px 14px; border:1px solid #e0d8cc; border-radius:6px; font-size:14px; box-sizing:border-box;">
+               style="width:100%; padding:12px 14px; border:1px solid #e8e0d8; border-radius:6px; font-size:14px; box-sizing:border-box;">
     </div>
 
     <div style="margin-bottom:18px;">
@@ -80,7 +80,7 @@
         </label>
         <textarea name="features" rows="6" required
                   placeholder="Dekorasi dasar&#10;Catering 100 pax&#10;Dokumentasi foto"
-                  style="width:100%; padding:12px 14px; border:1px solid #e0d8cc; border-radius:6px; font-size:14px; box-sizing:border-box; font-family:inherit; resize:vertical;">{{ old('features') }}</textarea>
+                  style="width:100%; padding:12px 14px; border:1px solid #e8e0d8; border-radius:6px; font-size:14px; box-sizing:border-box; font-family:inherit; resize:vertical;">{{ old('features') }}</textarea>
         <p style="margin:5px 0 0; font-size:11px; color:#8a8a8a;">Setiap baris = 1 fitur</p>
     </div>
 
@@ -90,10 +90,10 @@
                 Warna Aksen
             </label>
             <div style="display:flex; gap:10px; align-items:center;">
-                <input type="color" name="color" value="{{ old('color', '#c9a861') }}"
-                       style="width:60px; height:42px; border:1px solid #e0d8cc; border-radius:6px; cursor:pointer;">
-                <input type="text" value="{{ old('color', '#c9a861') }}" readonly
-                       style="flex:1; padding:12px 14px; border:1px solid #e0d8cc; border-radius:6px; font-size:14px;"
+                <input type="color" name="color" value="{{ old('color', '#d4af37') }}"
+                       style="width:60px; height:42px; border:1px solid #e8e0d8; border-radius:6px; cursor:pointer;">
+                <input type="text" value="{{ old('color', '#d4af37') }}" readonly
+                       style="flex:1; padding:12px 14px; border:1px solid #e8e0d8; border-radius:6px; font-size:14px;"
                        id="colorPreview">
             </div>
         </div>
