@@ -60,7 +60,8 @@
 
                 {{-- CONTENT --}}
                 <div style="flex:1;">
-                    <h3 style="margin:0 0 5px 0; font-size:16px; color:#0b3120; font-weight:500;">{{ $b->venue->name ?? 'Venue' }}</h3>
+                    <h3 style="margin:0 0 5px 0; font-size:16px; color:#333; font-weight:500;">{{ $b->venue->name ?? 'Venue' }}</h3>
+                    <p style="margin:0 0 8px 0; font-size:12px; color:#333;">Booking Code: {{ $b->booking_code }}</p>
                     <p style="margin:0 0 10px 0; font-size:13px; color:#999;">{{ $b->venue->location ?? 'Location' }}</p>
                     <p style="margin:0; font-size:13px; color:#666; display:flex; align-items:center; gap:8px;">
                         📅 {{ \Carbon\Carbon::parse($b->event_date)->format('l, j M Y') }} • 
@@ -126,6 +127,25 @@
                             style="background:#1976d2; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:12px;">
                             💳 {{ $b->payment_status == 'pending' ? 'Lanjutkan Bayar' : 'Bayar' }}
                         </button>
+                    @endif
+
+                    {{-- TOMBOL KONTAK --}}
+                    @if($b->status == 'confirmed' && $b->payment_status == 'paid')
+                        <a href="https://wa.me/6285715920398"
+                        target="_blank"
+                        style="
+                                background:#25D366;
+                                color:white;
+                                text-decoration:none;
+                                padding:8px 14px;
+                                border-radius:6px;
+                                font-size:12px;
+                                font-weight:500;
+                                display:inline-block;
+                                text-align:center;
+                        ">
+                            💬 Kontak
+                        </a>
                     @endif
 
                 </div>

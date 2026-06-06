@@ -152,9 +152,9 @@
                         PENDOPO<br>UTI
                     </div>
                     <p class="mt-4 text-sm leading-relaxed text-cream/60">
-                        Jl. Contoh Raya No. 123,<br>Bandung, Jawa Barat 40123
+                        Jl. Tim Asih, RT 007/RW 008, Jatiasih, Bekasi
                     </p>
-                    <p class="mt-3 text-sm text-cream/60">halo@pendopouti.example</p>
+                    <p class="mt-3 text-sm text-cream/60">pendopoutiwedding@gmail.com</p>
                 </div>
 
                 {{-- Links --}}
@@ -164,7 +164,7 @@
                         <li><a href="#facilities" class="transition-colors hover:text-gold-soft">Facilities</a></li>
                         <li><a href="{{ route('booking.create') }}" class="transition-colors hover:text-gold-soft">Booking</a></li>
                         <li><a href="{{ route('manage.index') }}" class="transition-colors hover:text-gold-soft">Manage</a></li>
-                        <li><a href="#contact" class="transition-colors hover:text-gold-soft">Kontak</a></li>
+                        <li><a href="https://wa.me/6285715920398" class="transition-colors hover:text-gold-soft">Kontak</a></li>
                     </ul>
                 </div>
 
@@ -172,18 +172,13 @@
                 <div>
                     <h4 class="text-sm font-semibold uppercase tracking-wider text-cream">Ikuti Kami</h4>
                     <div class="mt-4 flex gap-3">
-                        {{-- Facebook --}}
-                        <a href="#" aria-label="Facebook"
-                           class="flex h-10 w-10 items-center justify-center rounded-full border border-gold/50 text-gold transition-colors hover:bg-gold hover:text-ink">
-                            <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.99 3.66 9.13 8.44 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.78-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99C18.34 21.13 22 16.99 22 12z"/></svg>
-                        </a>
                         {{-- Instagram --}}
-                        <a href="#" aria-label="Instagram"
+                        <a href="https://www.instagram.com/pendopoutiofficial?igsh=NG5uMGxmb2pwaXE0" aria-label="Instagram"
                            class="flex h-10 w-10 items-center justify-center rounded-full border border-gold/50 text-gold transition-colors hover:bg-gold hover:text-ink">
                             <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16zm0 1.62c-3.15 0-3.52.01-4.76.07-.99.05-1.53.21-1.88.35-.47.18-.81.4-1.16.75-.35.35-.57.69-.75 1.16-.14.35-.3.89-.35 1.88-.06 1.24-.07 1.61-.07 4.76s.01 3.52.07 4.76c.05.99.21 1.53.35 1.88.18.47.4.81.75 1.16.35.35.69.57 1.16.75.35.14.89.3 1.88.35 1.24.06 1.61.07 4.76.07s3.52-.01 4.76-.07c.99-.05 1.53-.21 1.88-.35.47-.18.81-.4 1.16-.75.35-.35.57-.69.75-1.16.14-.35.3-.89.35-1.88.06-1.24.07-1.61.07-4.76s-.01-3.52-.07-4.76c-.05-.99-.21-1.53-.35-1.88a3.1 3.1 0 0 0-.75-1.16 3.1 3.1 0 0 0-1.16-.75c-.35-.14-.89-.3-1.88-.35-1.24-.06-1.61-.07-4.76-.07zm0 2.76a5.46 5.46 0 1 1 0 10.92 5.46 5.46 0 0 1 0-10.92zm0 9a3.54 3.54 0 1 0 0-7.08 3.54 3.54 0 0 0 0 7.08zm5.68-9.16a1.28 1.28 0 1 1-2.56 0 1.28 1.28 0 0 1 2.56 0z"/></svg>
                         </a>
                         {{-- WhatsApp --}}
-                        <a href="#" aria-label="WhatsApp"
+                        <a href="https://wa.me/6285715920398" aria-label="WhatsApp"
                            class="flex h-10 w-10 items-center justify-center rounded-full border border-gold/50 text-gold transition-colors hover:bg-gold hover:text-ink">
                             <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M.06 24l1.68-6.13a11.86 11.86 0 0 1-1.6-5.94C.15 5.34 5.5 0 12.06 0a11.8 11.8 0 0 1 8.4 3.49 11.8 11.8 0 0 1 3.48 8.41c0 6.56-5.34 11.9-11.9 11.9a11.9 11.9 0 0 1-5.69-1.45L.06 24zM6.6 20.13c1.68 1 3.28 1.59 5.4 1.59 5.45 0 9.9-4.43 9.9-9.88a9.82 9.82 0 0 0-2.9-7 9.82 9.82 0 0 0-7-2.9c-5.46 0-9.9 4.44-9.9 9.9 0 2.23.65 3.9 1.74 5.65l-.99 3.62 3.75-.98zm11.39-5.5c-.07-.12-.27-.2-.57-.35-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51l-.57-.01c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.06 2.87 1.21 3.07.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.62.71.23 1.36.2 1.87.12.57-.08 1.76-.72 2-1.41.25-.69.25-1.28.18-1.41z"/></svg>
                         </a>

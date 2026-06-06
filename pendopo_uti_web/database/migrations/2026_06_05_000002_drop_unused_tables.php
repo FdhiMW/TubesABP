@@ -20,7 +20,6 @@ return new class extends Migration
     {
         Schema::dropIfExists('venue_schedules');
         Schema::dropIfExists('wo_requests');
-        Schema::dropIfExists('notifications');
     }
 
     public function down(): void
