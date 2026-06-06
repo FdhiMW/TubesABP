@@ -1,59 +1,225 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Pendopo UTI — Web (Laravel)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Backend API dan dashboard admin untuk aplikasi booking wedding venue Pendopo UTI.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Teknologi
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **PHP** >= 8.2
+- **Laravel** 12
+- **MySQL**
+- **Laravel Sanctum** (autentikasi API)
+- **Midtrans** (payment gateway)
+- **Google Gemini** (AI chatbot)
+- **Firebase FCM** (push notification)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## Instalasi
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### 1. Install dependencies
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```bash
+composer install
+```
 
-## Laravel Sponsors
+### 2. Salin file environment
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```bash
+cp .env.example .env
+```
 
-### Premium Partners
+### 3. Generate application key
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```bash
+php artisan key:generate
+```
 
-## Contributing
+### 4. Konfigurasi `.env`
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```env
+APP_NAME=PendopoUTI
+APP_URL=http://127.0.0.1:8000
 
-## Code of Conduct
+# Database
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=pendopo_uti
+DB_USERNAME=root
+DB_PASSWORD=
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+# Google Gemini (AI Chatbot)
+GOOGLE_GEMINI_API_KEY=your_gemini_api_key
+GOOGLE_GEMINI_MODEL=gemini-2.5-flash
 
-## Security Vulnerabilities
+# Midtrans (Payment Gateway)
+MIDTRANS_SERVER_KEY=SB-Mid-server-xxxx
+MIDTRANS_CLIENT_KEY=SB-Mid-client-xxxx
+MIDTRANS_IS_PRODUCTION=false
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+# Firebase (Push Notification)
+FIREBASE_PROJECT_ID=your_project_id
+FIREBASE_CREDENTIALS=firebase-service-account.json
+```
 
-## License
+### 5. Buat database
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Buat database `pendopo_uti` di MySQL, lalu jalankan migrasi:
+
+```bash
+php artisan migrate
+```
+
+### 6. (Opsional) Jalankan seeder
+
+```bash
+php artisan db:seed
+```
+
+### 7. Jalankan server
+
+```bash
+php artisan serve
+```
+
+Aplikasi berjalan di: `http://127.0.0.1:8000`
+
+---
+
+## Cara Mendapatkan API Key
+
+### Google Gemini
+1. Buka [Google AI Studio](https://aistudio.google.com/app/apikey)
+2. Klik **Create API Key**
+3. Salin key ke `GOOGLE_GEMINI_API_KEY`
+
+### Midtrans
+1. Daftar/login di [dashboard.sandbox.midtrans.com](https://dashboard.sandbox.midtrans.com)
+2. Pastikan mode **Sandbox** aktif (toggle kiri atas)
+3. Buka **Settings → Access Keys**
+4. Salin **Server Key** dan **Client Key** ke `.env`
+
+> Key Sandbox diawali `SB-Mid-server-` dan `SB-Mid-client-`.
+> Gunakan `MIDTRANS_IS_PRODUCTION=false` selama testing.
+
+### Firebase FCM
+1. Buka [Firebase Console](https://console.firebase.google.com)
+2. Pilih project → **Project Settings → Service Accounts**
+3. Klik **Generate new private key** → download file JSON
+4. Simpan file JSON di root project (misal: `firebase-service-account.json`)
+5. Isi `FIREBASE_PROJECT_ID` dan `FIREBASE_CREDENTIALS` di `.env`
+
+---
+
+## Struktur Folder Penting
+
+```
+app/
+├── Http/
+│   ├── Controllers/
+│   │   ├── AdminController.php           # Manajemen booking & survei (admin)
+│   │   ├── BookingController.php         # Booking (web)
+│   │   ├── PaymentController.php         # Pembayaran Midtrans
+│   │   ├── SurveyController.php          # Survei venue
+│   │   ├── AiController.php              # AI chatbot
+│   │   ├── ManageController.php          # Riwayat & reschedule user
+│   │   └── API/                          # Controller khusus Flutter
+│   └── Middleware/
+│       └── RoleMiddleware.php            # Cek role admin/user
+├── Models/
+│   ├── Booking.php
+│   ├── Survey.php
+│   ├── Venue.php
+│   ├── Package.php
+│   ├── Notification.php
+│   └── User.php
+└── Services/
+    ├── GeminiService.php                 # Integrasi Google Gemini
+    ├── FirebaseNotificationService.php   # Integrasi Firebase FCM
+    └── AiContextService.php              # Konteks venue untuk AI
+```
+
+---
+
+## Role Pengguna
+
+| Role | Akses |
+|------|-------|
+| `user` | Booking, survei, pembayaran, riwayat |
+| `admin` | Semua fitur user + dashboard admin, approve/reject booking & survei, kelola paket |
+
+Untuk membuat akun admin, gunakan Laravel Tinker:
+
+```bash
+php artisan tinker
+```
+```php
+App\Models\User::where('email', 'admin@example.com')->update(['role' => 'admin']);
+```
+
+---
+
+## API Routes (untuk Flutter)
+
+Semua route API diawali `/api/`. Route yang membutuhkan autentikasi harus menyertakan header:
+
+```
+Authorization: Bearer {token}
+```
+
+| Method | Endpoint | Keterangan | Auth |
+|--------|----------|------------|------|
+| POST | `/api/register` | Registrasi | — |
+| POST | `/api/login` | Login | — |
+| POST | `/api/logout` | Logout | ✓ |
+| GET | `/api/me` | Data user login | ✓ |
+| GET | `/api/packages` | Daftar paket aktif | ✓ |
+| GET | `/api/availability-data` | Data ketersediaan kalender | — |
+| POST | `/api/bookings` | Buat booking | ✓ |
+| POST | `/api/bookings/{id}/payment` | Buat Snap token pembayaran | ✓ |
+| POST | `/api/bookings/callback` | Webhook Midtrans | — |
+| POST | `/api/surveys` | Buat survei | ✓ |
+| GET | `/api/manage` | Riwayat booking & survei | ✓ |
+| POST | `/api/booking/{id}/cancel` | Batalkan booking | ✓ |
+| POST | `/api/survey/{id}/cancel` | Batalkan survei | ✓ |
+| POST | `/api/booking/{id}/reschedule` | Reschedule booking | ✓ |
+| POST | `/api/survey/{id}/reschedule` | Reschedule survei | ✓ |
+| POST | `/api/ai/chat` | AI chatbot | ✓ |
+| POST | `/api/save-fcm-token` | Simpan token FCM | ✓ |
+| GET | `/api/notifications` | Daftar notifikasi | ✓ |
+
+---
+
+## Webhook Midtrans (Lokal)
+
+Midtrans membutuhkan URL publik untuk mengirim notifikasi pembayaran. Saat development di localhost, gunakan [ngrok](https://ngrok.com):
+
+```bash
+ngrok http 8000
+```
+
+Daftarkan URL yang muncul ke **Midtrans Sandbox → Settings → Configuration → Payment Notification URL**:
+
+```
+https://xxxx.ngrok.io/midtrans/callback
+```
+
+---
+
+## Perintah Berguna
+
+```bash
+# Hapus cache konfigurasi (wajib setelah ubah .env)
+php artisan config:clear
+
+# Hapus semua cache
+php artisan cache:clear
+
+# Lihat status migrasi
+php artisan migrate:status
+
+# Rollback migrasi terakhir
+php artisan migrate:rollback
+```
