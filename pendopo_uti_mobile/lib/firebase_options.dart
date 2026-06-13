@@ -51,11 +51,11 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBZFpfoJKb9Clt_-LBwWlXBZK7ShAPcTFY',
-    appId: '1:343922145540:android:7f882b70c42c80b5aab851',
-    messagingSenderId: '343922145540',
-    projectId: 'pendopo-uti-d19f2',
-    storageBucket: 'pendopo-uti-d19f2.firebasestorage.app',
+    apiKey: 'AIzaSyDjNYNZDjwtWjrVzAGTQ3BWtBzCWCE76BU',
+    appId: '1:866130709002:android:53a566c7be571aeb302df3',
+    messagingSenderId: '866130709002',
+    projectId: 'pendopo-uti-c1bba',
+    storageBucket: 'pendopo-uti-c1bba.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(

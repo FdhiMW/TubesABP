@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class AuthService {
-  // Emulator Android: 10.0.2.2
-  // Device fisik: ganti dengan IP laptop/PC kamu, misalnya 192.168.1.10
-  static const String baseUrl = 'http://192.168.1.10:8000/api';
+  // Emulator Android: gunakan 10.0.2.2
+  // Device fisik: ganti dengan IP laptop/PC yang menjalankan server Laravel
+  // Cek IP laptop: Windows → ipconfig | macOS/Linux → ifconfig
+  // Pastikan device & laptop terhubung ke WiFi yang SAMA
+  static const String baseUrl = 'http://192.168.1.12:8000/api';
 
   static Future<Map<String, dynamic>> login({
     required String email,

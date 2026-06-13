@@ -305,7 +305,7 @@ class _ManagePageState extends State<ManagePage> {
       final url = Uri.parse('$snapBase$snapToken');
 
       if (await canLaunchUrl(url)) {
-        await launchUrl(url, mode: LaunchMode.externalBrowser);
+        await launchUrl(url, mode: LaunchMode.externalApplication);
         _showNotification('Halaman pembayaran dibuka. Kembali ke sini setelah bayar, lalu ketuk "Cek Status".', true);
         // Refresh otomatis setelah 8 detik
         Future.delayed(const Duration(seconds: 8), _loadData);

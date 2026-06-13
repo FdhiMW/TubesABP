@@ -44,7 +44,7 @@ class HomeScreen extends StatelessWidget {
       context,
       MaterialPageRoute(
         builder: (_) => BookingPage(
-          baseUrl: 'http://10.32.224.27:8000/api', // Logika API asli
+          baseUrl: AuthService.baseUrl,
           token: token,
           userName: userName,
           userEmail: userEmail,
@@ -69,7 +69,7 @@ class HomeScreen extends StatelessWidget {
       context,
       MaterialPageRoute(
       builder: (_) => ManagePage(
-      baseUrl: 'http://10.32.224.27:8000/api', // PASTIKAN BARIS INI DITAMBAHKAN
+      baseUrl: AuthService.baseUrl,
       token: token,
       userName: userName,
       userEmail: userEmail,
@@ -389,46 +389,6 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
 
-            // --- FOOTER ---
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.only(left: 24, right: 24, top: 60, bottom: 40),
-              color: const Color(0xFF16241A),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'PENDOPO\nUTI',
-                    style: TextStyle(color: brandCream, fontSize: 18, fontWeight: FontWeight.w700, letterSpacing: 2),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Jl. Contoh Raya No. 123,\nBandung, Jawa Barat 40123\n\nhalo@pendopouti.example',
-                    style: TextStyle(color: brandCream.withOpacity(0.7), fontSize: 13, height: 1.5),
-                  ),
-                  const SizedBox(height: 40),
-                  const Text('TAUTAN', style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
-                  const SizedBox(height: 12),
-                  _buildFooterLink('Facilities', _scrollToFacilities),
-                  _buildFooterLink('Booking', () => _navigateToBooking(context)), // Panggil fungsi routing di sini
-                  _buildFooterLink('Manage', () => _navigateToManage(context)),
-                  _buildFooterLink('Kontak', () {}),
-                  const SizedBox(height: 32),
-                  const Text('IKUTI KAMI', style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
-                  const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      _buildSocialIcon(Icons.facebook),
-                      const SizedBox(width: 12),
-                      _buildSocialIcon(Icons.camera_alt), // Instagram icon placeholder
-                      const SizedBox(width: 12),
-                      _buildSocialIcon(Icons.alternate_email), // Twitter/X icon placeholder
-                    ],
-                  ),
-                  const SizedBox(height: 40),
-                ],
-              ),
-            ),
           ],
         ),
       ),
