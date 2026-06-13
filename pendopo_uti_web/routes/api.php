@@ -8,6 +8,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SurveyController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Package;
+use App\Models\Venue;
 use App\Http\Controllers\AiController;
 use App\Http\Controllers\Api\NotificationController;
 
@@ -38,6 +39,16 @@ Route::middleware('auth:sanctum')->group(function () {
         return response()->json([
             'success' => true,
             'data'    => Package::active()->get(),
+        ]);
+    });
+
+    // Venues untuk Flutter — menampilkan kapasitas
+    Route::get('/venues', function () {
+        return response()->json([
+            'success' => true,
+            'data'    => Venue::where('status', 'active')
+                ->select('id', 'name', 'capacity', 'location')
+                ->get(),
         ]);
     });
 

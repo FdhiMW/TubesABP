@@ -49,6 +49,21 @@ class BookingApi {
         'Authorization': 'Bearer $token',
       };
 
+  Future<int> fetchVenueCapacity({int venueId = 1}) async {
+    final res = await http.get(
+      Uri.parse('$baseUrl/venues'),
+      headers: _headers,
+    );
+    if (res.statusCode != 200) return 0;
+    final body = jsonDecode(res.body);
+    final list = (body['data'] as List? ?? []);
+    final venue = list.firstWhere(
+      (v) => (v['id'] as int?) == venueId,
+      orElse: () => list.isNotEmpty ? list.first : null,
+    );
+    return venue != null ? (venue['capacity'] as int? ?? 0) : 0;
+  }
+
   Future<List<BookingPackage>> fetchPackages() async {
     final res = await http.get(
         Uri.parse('$baseUrl/packages'),
@@ -189,6 +204,7 @@ class _BookingVenueFormScreenState extends State<_BookingVenueFormScreen> {
   bool isLoadingPackages = true;
   bool isSubmitting = false;
   String? errorMessage;
+  int venueCapacity = 0;
 
   final fullNameController = TextEditingController();
   final emailController = TextEditingController();
@@ -196,7 +212,7 @@ class _BookingVenueFormScreenState extends State<_BookingVenueFormScreen> {
   final eventDateController = TextEditingController();
   final startTimeController = TextEditingController(text: '10:00');
   final endTimeController = TextEditingController(text: '17:00');
-  final guestCountController = TextEditingController(text: '300');
+  final guestCountController = TextEditingController(text: '100');
 
   List<BookingPackage> packages = const [];
 
@@ -209,6 +225,7 @@ class _BookingVenueFormScreenState extends State<_BookingVenueFormScreen> {
     phoneController.text = widget.userPhone;
 
     _loadPackages();
+    _loadVenueCapacity();
   }
 
   @override
@@ -221,6 +238,12 @@ class _BookingVenueFormScreenState extends State<_BookingVenueFormScreen> {
     endTimeController.dispose();
     guestCountController.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadVenueCapacity() async {
+    final capacity = await api.fetchVenueCapacity(venueId: 1);
+    if (!mounted) return;
+    setState(() => venueCapacity = capacity);
   }
 
   Future<void> _loadPackages() async {
@@ -320,9 +343,13 @@ class _BookingVenueFormScreenState extends State<_BookingVenueFormScreen> {
     }
 
     final guestCount = int.tryParse(guestCountController.text.trim()) ?? 0;
-    if (guestCount < 1 || guestCount > 300) {
-        _toast('Jumlah tamu maksimal 300.');
-        return;
+    if (guestCount < 1) {
+      _toast('Jumlah tamu minimal 1 orang.');
+      return;
+    }
+    if (venueCapacity > 0 && guestCount > venueCapacity) {
+      _toast('Jumlah tamu melebihi kapasitas venue (maksimal $venueCapacity orang).');
+      return;
     }
 
     setState(() => isSubmitting = true);
@@ -406,60 +433,78 @@ class _BookingVenueFormScreenState extends State<_BookingVenueFormScreen> {
 
   Widget _buildStepIndicator() {
     const titles = ['Data Diri', 'Detail Acara', 'Paket', 'Konfirmasi'];
-    final themeColor = const Color(0xFFD4B15F);
-    final inactiveColor = const Color(0xFFE6DCCF);
+    const themeColor = Color(0xFFD4B15F);
+    const inactiveColor = Color(0xFFE6DCCF);
 
-    return Row(
-      children: List.generate(4, (index) {
-        final active = index <= currentStep;
-        final current = index == currentStep;
-
-        return Expanded(
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  children: [
-                    Container(
-                      width: 48,
-                      height: 48,
-                      decoration: BoxDecoration(
-                        color: active ? themeColor : inactiveColor,
-                        shape: BoxShape.circle,
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        index < currentStep ? '✓' : '${index + 1}',
-                        style: TextStyle(
-                          color: active ? Colors.white : const Color(0xFF9B8E7C),
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
+    return Column(
+      children: [
+        // Row 1: lingkaran + garis connector
+        Row(
+          children: List.generate(4, (index) {
+            final active = index <= currentStep;
+            return Expanded(
+              child: Row(
+                children: [
+                  // Garis kiri (kecuali step pertama)
+                  Expanded(
+                    child: index == 0
+                        ? const SizedBox()
+                        : Container(
+                            height: 2,
+                            color: index <= currentStep ? themeColor : inactiveColor,
+                          ),
+                  ),
+                  // Lingkaran
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: active ? themeColor : inactiveColor,
+                      shape: BoxShape.circle,
                     ),
-                    const SizedBox(height: 10),
-                    Text(
-                      titles[index],
-                      textAlign: TextAlign.center,
+                    alignment: Alignment.center,
+                    child: Text(
+                      index < currentStep ? '✓' : '${index + 1}',
                       style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: current ? FontWeight.w700 : FontWeight.w500,
-                        color: current ? const Color(0xFF0B3B34) : const Color(0xFF8C8170),
+                        color: active ? Colors.white : const Color(0xFF9B8E7C),
+                        fontWeight: FontWeight.w800,
+                        fontSize: 14,
                       ),
                     ),
-                  ],
+                  ),
+                  // Garis kanan (kecuali step terakhir)
+                  Expanded(
+                    child: index == 3
+                        ? const SizedBox()
+                        : Container(
+                            height: 2,
+                            color: index < currentStep ? themeColor : inactiveColor,
+                          ),
+                  ),
+                ],
+              ),
+            );
+          }),
+        ),
+        const SizedBox(height: 8),
+        // Row 2: label teks sejajar di bawah masing-masing lingkaran
+        Row(
+          children: List.generate(4, (index) {
+            final current = index == currentStep;
+            return Expanded(
+              child: Text(
+                titles[index],
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: current ? FontWeight.w700 : FontWeight.w500,
+                  color: current ? const Color(0xFF0B3B34) : const Color(0xFF8C8170),
                 ),
               ),
-              if (index != 3)
-                Container(
-                  width: 38,
-                  height: 2,
-                  margin: const EdgeInsets.only(bottom: 34),
-                  color: index < currentStep ? themeColor : inactiveColor,
-                ),
-            ],
-          ),
-        );
-      }),
+            );
+          }),
+        ),
+      ],
     );
   }
 
@@ -514,8 +559,6 @@ class _BookingVenueFormScreenState extends State<_BookingVenueFormScreen> {
 
         child: Container(
         width: double.infinity,
-        margin: const EdgeInsets.symmetric(horizontal: 6),
-
         padding: const EdgeInsets.fromLTRB(14, 18, 14, 16),
 
         decoration: BoxDecoration(
@@ -796,7 +839,38 @@ class _BookingVenueFormScreenState extends State<_BookingVenueFormScreen> {
             ],
           ),
           const SizedBox(height: 18),
-          _labelField('Jumlah Tamu', guestCountController),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Jumlah Tamu',
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                controller: guestCountController,
+                keyboardType: TextInputType.number,
+                decoration: _inputDecoration().copyWith(
+                  hintText: venueCapacity > 0
+                      ? 'Maks. $venueCapacity orang'
+                      : 'Masukkan jumlah tamu',
+                  suffixIcon: venueCapacity > 0
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                          child: Text(
+                            '/ $venueCapacity',
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: Color(0xFF8A6C2E),
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        )
+                      : null,
+                ),
+              ),
+            ],
+          ),
           const SizedBox(height: 14),
           Container(
             width: double.infinity,
@@ -805,9 +879,10 @@ class _BookingVenueFormScreenState extends State<_BookingVenueFormScreen> {
               color: const Color(0xFFFFF5E3),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: const Text(
-              '⏰ Jam operasional venue: 07:00 - 22:00. Maksimal 2 booking per tanggal.',
-              style: TextStyle(fontSize: 13, color: Color(0xFF8A6C2E)),
+            child: Text(
+              '⏰ Jam operasional venue: 07:00 - 22:00. Maksimal 2 booking per tanggal.'
+              '${venueCapacity > 0 ? '\n👥 Kapasitas venue: $venueCapacity orang.' : ''}',
+              style: const TextStyle(fontSize: 13, color: Color(0xFF8A6C2E)),
             ),
           ),
         ],
@@ -1346,7 +1421,6 @@ class _BookingBottomNav extends StatelessWidget {
         child: SizedBox(
           height: 72,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _navItem(context, 0, Icons.home_rounded, 'Home', currentIndex == 0, heritageGreen, () {
                 Navigator.popUntil(context, (route) => route.isFirst);
@@ -1389,10 +1463,9 @@ class _BookingBottomNav extends StatelessWidget {
     Color activeColor,
     VoidCallback onTap,
   ) {
-    return InkWell(
-      onTap: onTap,
-      child: SizedBox(
-        width: 72,
+    return Expanded(
+      child: InkWell(
+        onTap: onTap,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
