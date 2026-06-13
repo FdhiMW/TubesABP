@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 import 'booking_page.dart';
 
 // ==========================================
@@ -156,7 +157,7 @@ class ManageApi {
     throw Exception(_messageFromBody(body, 'Gagal reschedule'));
   }
 
-  /// GET /api/payment/{id} → PaymentController@pay (sama web manage)
+  /// GET /api/payment/{id} → PaymentController@pay
   Future<String?> getPaymentToken(int id) async {
     final res = await http.get(Uri.parse('$baseUrl/payment/$id'), headers: _headers);
     if (res.statusCode >= 200 && res.statusCode < 300) {
@@ -164,6 +165,19 @@ class ManageApi {
       return body['token']?.toString();
     }
     return null;
+  }
+
+  /// POST /api/bookings/{id}/confirm-payment → PaymentController@confirmFromClient
+  Future<bool> confirmPayment(int id) async {
+    final res = await http.post(
+      Uri.parse('$baseUrl/bookings/$id/confirm-payment'),
+      headers: _headers,
+    );
+    if (res.statusCode >= 200 && res.statusCode < 300) {
+      final body = jsonDecode(res.body);
+      return body['success'] == true;
+    }
+    return false;
   }
 }
 
@@ -278,14 +292,42 @@ class _ManagePageState extends State<ManagePage> {
 
   Future<void> _handlePayment(int id) async {
     try {
-      final token = await api.getPaymentToken(id);
-      if (token == null) {
-        _showNotification('Gagal memuat pembayaran.', false);
+      final snapToken = await api.getPaymentToken(id);
+      if (snapToken == null) {
+        _showNotification('Gagal memuat token pembayaran.', false);
         return;
       }
-      _showNotification('Token pembayaran siap (integrasikan Midtrans Snap).', true);
+      // Buka halaman Snap Midtrans di browser
+      const isProduction = false; // ganti true saat production
+      final snapBase = isProduction
+          ? 'https://app.midtrans.com/snap/v2/vtweb/'
+          : 'https://app.sandbox.midtrans.com/snap/v2/vtweb/';
+      final url = Uri.parse('$snapBase$snapToken');
+
+      if (await canLaunchUrl(url)) {
+        await launchUrl(url, mode: LaunchMode.externalBrowser);
+        _showNotification('Halaman pembayaran dibuka. Kembali ke sini setelah bayar, lalu ketuk "Cek Status".', true);
+        // Refresh otomatis setelah 8 detik
+        Future.delayed(const Duration(seconds: 8), _loadData);
+      } else {
+        _showNotification('Tidak bisa membuka browser pembayaran.', false);
+      }
     } catch (e) {
       _showNotification('Gagal memuat pembayaran.', false);
+    }
+  }
+
+  Future<void> _handleConfirmPayment(int id) async {
+    try {
+      final success = await api.confirmPayment(id);
+      if (success) {
+        _showNotification('Pembayaran berhasil dikonfirmasi!', true);
+        _loadData();
+      } else {
+        _showNotification('Pembayaran belum terverifikasi. Coba lagi setelah selesai bayar.', false);
+      }
+    } catch (e) {
+      _showNotification('Gagal cek status pembayaran.', false);
     }
   }
 
@@ -603,12 +645,37 @@ class _ManagePageState extends State<ManagePage> {
       );
     } else if (data.status == 'confirmed' && data.paymentStatus == 'unpaid') {
       return SizedBox(
-        width: double.infinity, 
+        width: double.infinity,
         child: ElevatedButton.icon(
           onPressed: () => _handlePayment(data.id),
-          icon: const Icon(Icons.credit_card, size: 18), label: const Text('Bayar'),
+          icon: const Icon(Icons.credit_card, size: 18),
+          label: const Text('Bayar Sekarang'),
           style: ElevatedButton.styleFrom(backgroundColor: blueButton, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)), padding: const EdgeInsets.symmetric(vertical: 12), elevation: 0),
         ),
+      );
+    } else if (data.status == 'confirmed' && data.paymentStatus == 'pending') {
+      return Column(
+        children: [
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: () => _handlePayment(data.id),
+              icon: const Icon(Icons.open_in_browser, size: 18),
+              label: const Text('Lanjutkan Bayar'),
+              style: ElevatedButton.styleFrom(backgroundColor: blueButton, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)), padding: const EdgeInsets.symmetric(vertical: 12), elevation: 0),
+            ),
+          ),
+          const SizedBox(height: 8),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: () => _handleConfirmPayment(data.id),
+              icon: const Icon(Icons.refresh, size: 18),
+              label: const Text('Cek Status Pembayaran'),
+              style: OutlinedButton.styleFrom(foregroundColor: heritageGreen, side: const BorderSide(color: heritageGreen), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)), padding: const EdgeInsets.symmetric(vertical: 12)),
+            ),
+          ),
+        ],
       );
     }
     return const SizedBox.shrink();
@@ -773,6 +840,7 @@ class _ManagePageState extends State<ManagePage> {
 
   Widget _buildPaymentBadge(String status) {
     if (status == 'paid') return _badgeUI('Sudah Bayar', primaryFixed, onPrimaryFixed);
+    if (status == 'pending') return _badgeUI('Menunggu Bayar', secondaryContainer, onSecondaryContainer);
     return _badgeUI('Belum Bayar', errorContainer, onErrorContainer);
   }
 

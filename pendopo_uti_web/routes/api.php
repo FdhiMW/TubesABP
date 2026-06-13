@@ -9,6 +9,7 @@ use App\Http\Controllers\SurveyController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Package;
 use App\Http\Controllers\AiController;
+use App\Http\Controllers\Api\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,6 +57,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/booking/{id}/reschedule', [ManageController::class, 'rescheduleBooking']);
     Route::post('/survey/{id}/reschedule', [ManageController::class, 'rescheduleSurvey']);
     Route::get('/payment/{id}', [PaymentController::class, 'pay']);
+    Route::post('/bookings/{id}/confirm-payment', [PaymentController::class, 'confirmFromClient']);
 
     // AI Chatbot — AiController (sama web POST /ai/chat)
     Route::post('/ai/chat', [AiController::class, 'chat']);
