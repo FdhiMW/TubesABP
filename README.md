@@ -16,33 +16,33 @@ tubesABP/
 
 ## Tech Stack
 
-| Layer | Teknologi |
-|---|---|
-| Backend | Laravel 12, PHP ^8.2, MySQL |
-| Auth API | Laravel Sanctum |
-| Payment | Midtrans Snap (sandbox) |
+| Layer      | Teknologi                         |
+| ---------- | --------------------------------- |
+| Backend    | Laravel 12, PHP ^8.2, MySQL       |
+| Auth API   | Laravel Sanctum                   |
+| Payment    | Midtrans Snap (sandbox)           |
 | Push Notif | Firebase FCM (Cloud Messaging v1) |
-| AI Chatbot | Google Gemini API |
-| Mobile | Flutter ^3.11.4, Dart |
-| Maps | flutter_map + OpenStreetMap |
+| AI Chatbot | Google Gemini API                 |
+| Mobile     | Flutter ^3.11.4, Dart             |
+| Maps       | flutter_map + OpenStreetMap       |
 
 ---
 
 ## Fitur
 
-| Fitur | Web | Mobile |
-|---|---|---|
-| Register & Login | ✓ | ✓ |
-| Booking Venue | ✓ | ✓ |
-| Booking Survey Kunjungan | ✓ | ✓ |
-| Lihat Ketersediaan Tanggal | ✓ | ✓ |
-| Pembayaran via Midtrans Snap | ✓ | ✓ |
-| Kelola Booking (batalkan, reschedule) | ✓ | ✓ |
-| Peta Lokasi Venue | — | ✓ |
-| AI Chatbot (Google Gemini) | ✓ | ✓ |
-| Push Notification (FCM) | — | ✓ |
-| Dashboard Admin | ✓ | — |
-| Manajemen Venue & Paket | ✓ | — |
+| Fitur                                 | Web | Mobile |
+| ------------------------------------- | --- | ------ |
+| Register & Login                      | ✓   | ✓      |
+| Booking Venue                         | ✓   | ✓      |
+| Booking Survey Kunjungan              | ✓   | ✓      |
+| Lihat Ketersediaan Tanggal            | ✓   | ✓      |
+| Pembayaran via Midtrans Snap          | ✓   | ✓      |
+| Kelola Booking (batalkan, reschedule) | ✓   | ✓      |
+| Peta Lokasi Venue                     | —   | ✓      |
+| AI Chatbot (Google Gemini)            | ✓   | ✓      |
+| Push Notification (FCM)               | —   | ✓      |
+| Dashboard Admin                       | ✓   | —      |
+| Manajemen Venue & Paket               | ✓   | —      |
 
 ---
 
@@ -111,6 +111,7 @@ GOOGLE_GEMINI_MODEL=gemini-2.5-flash
 ```
 
 Cara mendapatkan key:
+
 - **Midtrans**: [dashboard.sandbox.midtrans.com](https://dashboard.sandbox.midtrans.com) → Settings → Access Keys
 - **Firebase**: [console.firebase.google.com](https://console.firebase.google.com) → Project Settings → Service Accounts → Generate new private key → simpan JSON di `storage/app/firebase/`
 - **Gemini**: [aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey)
@@ -153,44 +154,46 @@ flutter run
 
 ## Struktur Database
 
-| Tabel | Keterangan |
-|---|---|
-| `users` | Data pengguna & FCM token device |
-| `venues` | Data venue (nama, kapasitas, lokasi) |
-| `packages` | Paket pernikahan (nama, harga, fitur) |
-| `bookings` | Data pemesanan venue |
-| `surveys` | Data booking survey kunjungan lokasi |
-| `notifications` | Notifikasi per user |
-| `personal_access_tokens` | Token Sanctum untuk auth API |
+| Tabel                    | Keterangan                            |
+| ------------------------ | ------------------------------------- |
+| `users`                  | Data pengguna & FCM token device      |
+| `venues`                 | Data venue (nama, kapasitas, lokasi)  |
+| `packages`               | Paket pernikahan (nama, harga, fitur) |
+| `bookings`               | Data pemesanan venue                  |
+| `surveys`                | Data booking survey kunjungan lokasi  |
+| `notifications`          | Notifikasi per user                   |
+| `personal_access_tokens` | Token Sanctum untuk auth API          |
 
 ---
 
 ## API Endpoints
 
 ### Public
-| Method | Endpoint | Keterangan |
-|---|---|---|
-| POST | `/api/register` | Registrasi akun baru |
-| POST | `/api/login` | Login, mendapat Bearer token |
-| GET | `/api/availability-data` | Data ketersediaan kalender |
+
+| Method | Endpoint                 | Keterangan                   |
+| ------ | ------------------------ | ---------------------------- |
+| POST   | `/api/register`          | Registrasi akun baru         |
+| POST   | `/api/login`             | Login, mendapat Bearer token |
+| GET    | `/api/availability-data` | Data ketersediaan kalender   |
 
 ### Protected (Bearer Token)
-| Method | Endpoint | Keterangan |
-|---|---|---|
-| GET | `/api/venues` | Daftar venue beserta kapasitas |
-| GET | `/api/packages` | Daftar paket aktif |
-| POST | `/api/bookings` | Buat booking venue baru |
-| POST | `/api/surveys` | Buat booking survey |
-| GET | `/api/manage` | Booking & survey milik user |
-| POST | `/api/bookings/{id}/payment` | Generate Midtrans Snap token |
-| POST | `/api/bookings/{id}/confirm-payment` | Cek & update status pembayaran |
-| POST | `/api/booking/{id}/cancel` | Batalkan booking |
-| POST | `/api/booking/{id}/reschedule` | Reschedule booking |
-| POST | `/api/survey/{id}/cancel` | Batalkan survey |
-| POST | `/api/survey/{id}/reschedule` | Reschedule survey |
-| POST | `/api/save-fcm-token` | Simpan FCM token device |
-| GET | `/api/notifications` | Daftar notifikasi user |
-| POST | `/api/ai/chat` | AI Chatbot (Google Gemini) |
+
+| Method | Endpoint                             | Keterangan                     |
+| ------ | ------------------------------------ | ------------------------------ |
+| GET    | `/api/venues`                        | Daftar venue beserta kapasitas |
+| GET    | `/api/packages`                      | Daftar paket aktif             |
+| POST   | `/api/bookings`                      | Buat booking venue baru        |
+| POST   | `/api/surveys`                       | Buat booking survey            |
+| GET    | `/api/manage`                        | Booking & survey milik user    |
+| POST   | `/api/bookings/{id}/payment`         | Generate Midtrans Snap token   |
+| POST   | `/api/bookings/{id}/confirm-payment` | Cek & update status pembayaran |
+| POST   | `/api/booking/{id}/cancel`           | Batalkan booking               |
+| POST   | `/api/booking/{id}/reschedule`       | Reschedule booking             |
+| POST   | `/api/survey/{id}/cancel`            | Batalkan survey                |
+| POST   | `/api/survey/{id}/reschedule`        | Reschedule survey              |
+| POST   | `/api/save-fcm-token`                | Simpan FCM token device        |
+| GET    | `/api/notifications`                 | Daftar notifikasi user         |
+| POST   | `/api/ai/chat`                       | AI Chatbot (Google Gemini)     |
 
 ---
 
@@ -219,15 +222,10 @@ ngrok http 8000
 ```
 
 Daftarkan URL ngrok di Midtrans → Settings → Configuration → Payment Notification URL:
+
 ```
 https://xxxx.ngrok.io/api/bookings/callback
 ```
-
----
-
-## Anggota Tim
-
-> *(isi sesuai nama anggota kelompok)*
 
 ---
 
